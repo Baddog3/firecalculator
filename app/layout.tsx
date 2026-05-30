@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { getSiteUrl } from "@/lib/site";
 import "@/styles/globals.css";
+
+const siteUrl = getSiteUrl();
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -17,13 +20,13 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://yourdomain.com"),
+  metadataBase: new URL(siteUrl),
   title: "Финансовые калькуляторы",
   description: "Калькуляторы для инвесторов на русском языке.",
   openGraph: {
     title: "Финансовые калькуляторы",
     description: "Калькуляторы для инвесторов на русском языке.",
-    url: "https://yourdomain.com",
+    url: siteUrl,
     siteName: "Финансовые калькуляторы",
     locale: "ru_RU",
     type: "website"

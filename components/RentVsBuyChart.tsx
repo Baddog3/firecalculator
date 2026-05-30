@@ -10,16 +10,14 @@ import {
   YAxis
 } from "recharts";
 
-type CompoundChartPoint = {
+type RentVsBuyChartPoint = {
   year: number;
-  withContributions: number;
-  withoutContributions: number;
+  buyerNetWorth: number;
+  renterNetWorth: number;
 };
 
-type CompoundChartProps = {
-  data: CompoundChartPoint[];
-  primaryName?: string;
-  secondaryName?: string;
+type RentVsBuyChartProps = {
+  data: RentVsBuyChartPoint[];
 };
 
 const rubFormat = (value: number) =>
@@ -29,11 +27,7 @@ const rubFormat = (value: number) =>
     maximumFractionDigits: 0
   }).format(value);
 
-export default function CompoundChart({
-  data,
-  primaryName = "С пополнениями",
-  secondaryName = "Без пополнений"
-}: CompoundChartProps) {
+export default function RentVsBuyChart({ data }: RentVsBuyChartProps) {
   return (
     <div className="h-80 w-full border border-border bg-bg-secondary p-3">
       <ResponsiveContainer width="100%" height="100%">
@@ -41,22 +35,22 @@ export default function CompoundChart({
           <CartesianGrid stroke="#e5e5e5" strokeDasharray="2 2" />
           <XAxis dataKey="year" tick={{ fontSize: 12 }} />
           <YAxis tickFormatter={rubFormat} tick={{ fontSize: 12 }} width={90} />
-          <Tooltip formatter={(value: number) => rubFormat(value)} />
+          <Tooltip formatter={(value: number) => rubFormat(value)} labelFormatter={(year) => `Год ${year}`} />
           <Line
             type="monotone"
-            dataKey="withContributions"
+            dataKey="buyerNetWorth"
             stroke="#111111"
             strokeWidth={2}
             dot={false}
-            name={primaryName}
+            name="Покупка"
           />
           <Line
             type="monotone"
-            dataKey="withoutContributions"
+            dataKey="renterNetWorth"
             stroke="#888888"
             strokeWidth={2}
             dot={false}
-            name={secondaryName}
+            name="Аренда"
           />
         </LineChart>
       </ResponsiveContainer>

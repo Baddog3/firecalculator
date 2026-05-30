@@ -30,3 +30,13 @@ npm run dev
 npm run build
 npm start
 ```
+
+## Vercel
+
+В **Settings → Environment Variables** добавьте:
+
+```
+NEXT_PUBLIC_SITE_URL=https://firecalculator-doir.vercel.app
+```
+
+При подключении своего домена замените на `https://fincalc.ru` (или ваш домен).

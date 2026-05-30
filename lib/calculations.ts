@@ -225,3 +225,243 @@ export function calculateFire(input: FireInput): FireResult {
     intersectionAge
   };
 }
+
+export type RentVsBuyInput = {
+  homePrice: number;
+  downPayment: number;
+  mortgageRatePercent: number;
+  mortgageYears: number;
+  comparisonYears: number;
+  monthlyRent: number;
+  rentIncreasePercent: number;
+  homeAppreciationPercent: number;
+  maintenancePercent: number;
+  investmentReturnPercent: number;
+};
+
+export type RentVsBuyYearRow = {
+  year: number;
+  buyerNetWorth: number;
+  renterNetWorth: number;
+  rentPaidCumulative: number;
+  buyPaidCumulative: number;
+  homeValue: number;
+  loanBalance: number;
+};
+
+export type RentVsBuyResult = {
+  monthlyMortgagePayment: number;
+  loanAmount: number;
+  totalRentPaid: number;
+  totalBuyPaid: number;
+  buyerNetWorth: number;
+  renterNetWorth: number;
+  wealthDifference: number;
+  winner: "buy" | "rent" | "tie";
+  breakEvenYear: number | null;
+  homeValueAtEnd: number;
+  rows: RentVsBuyYearRow[];
+};
+
+function getMonthlyMortgagePayment(loanAmount: number, annualRate: number, years: number): number {
+  const months = years * 12;
+  const monthlyRate = annualRate / 12;
+
+  if (loanAmount <= 0) {
+    return 0;
+  }
+
+  if (monthlyRate === 0) {
+    return loanAmount / months;
+  }
+
+  const factor = Math.pow(1 + monthlyRate, months);
+  return (loanAmount * monthlyRate * factor) / (factor - 1);
+}
+
+export function calculateRentVsBuy(input: RentVsBuyInput): RentVsBuyResult {
+  const homePrice = Math.max(0, input.homePrice);
+  const downPayment = Math.min(Math.max(0, input.downPayment), homePrice);
+  const mortgageYears = Math.max(1, Math.floor(input.mortgageYears));
+  const comparisonYears = Math.max(1, Math.floor(input.comparisonYears));
+
+  const mortgageRate = Math.max(0, input.mortgageRatePercent) / 100;
+  const rentIncrease = Math.max(0, input.rentIncreasePercent) / 100;
+  const homeAppreciation = Math.max(0, input.homeAppreciationPercent) / 100;
+  const maintenanceRate = Math.max(0, input.maintenancePercent) / 100;
+  const investmentReturn = Math.max(0, input.investmentReturnPercent) / 100;
+  const monthlyInvestmentRate = investmentReturn / 12;
+
+  const loanAmount = homePrice - downPayment;
+  const monthlyMortgagePayment = getMonthlyMortgagePayment(loanAmount, mortgageRate, mortgageYears);
+  const monthlyMortgageRate = mortgageRate / 12;
+
+  let homeValue = homePrice;
+  let loanBalance = loanAmount;
+  let rentMonthly = Math.max(0, input.monthlyRent);
+  let renterPortfolio = downPayment;
+  let rentPaidCumulative = 0;
+  let buyPaidCumulative = downPayment;
+
+  const rows: RentVsBuyYearRow[] = [
+    {
+      year: 0,
+      buyerNetWorth: homeValue - loanBalance,
+      renterNetWorth: renterPortfolio,
+      rentPaidCumulative: 0,
+      buyPaidCumulative: downPayment,
+      homeValue,
+      loanBalance
+    }
+  ];
+
+  let breakEvenYear: number | null = null;
+
+  for (let year = 1; year <= comparisonYears; year += 1) {
+    for (let month = 0; month < 12; month += 1) {
+      const mortgagePayment = loanBalance > 0 ? monthlyMortgagePayment : 0;
+      if (loanBalance > 0 && mortgagePayment > 0) {
+        const interestPart = loanBalance * monthlyMortgageRate;
+        const principalPart = Math.min(loanBalance, Math.max(0, mortgagePayment - interestPart));
+        loanBalance = Math.max(0, loanBalance - principalPart);
+      }
+
+      const maintenancePayment = (homeValue * maintenanceRate) / 12;
+      const buyerHousingCost = mortgagePayment + maintenancePayment;
+      rentPaidCumulative += rentMonthly;
+      buyPaidCumulative += buyerHousingCost;
+
+      renterPortfolio *= 1 + monthlyInvestmentRate;
+      renterPortfolio -= rentMonthly;
+      if (buyerHousingCost > rentMonthly) {
+        renterPortfolio += buyerHousingCost - rentMonthly;
+      }
+    }
+
+    homeValue *= 1 + homeAppreciation;
+    rentMonthly *= 1 + rentIncrease;
+
+    const buyerNetWorth = homeValue - loanBalance;
+    const renterNetWorth = Math.max(0, renterPortfolio);
+
+    rows.push({
+      year,
+      buyerNetWorth,
+      renterNetWorth,
+      rentPaidCumulative,
+      buyPaidCumulative,
+      homeValue,
+      loanBalance
+    });
+
+    if (breakEvenYear === null && buyerNetWorth > renterNetWorth) {
+      breakEvenYear = year;
+    }
+  }
+
+  const last = rows[rows.length - 1];
+  const buyerNetWorth = last?.buyerNetWorth ?? 0;
+  const renterNetWorth = last?.renterNetWorth ?? 0;
+  const wealthDifference = buyerNetWorth - renterNetWorth;
+
+  let winner: RentVsBuyResult["winner"] = "tie";
+  if (wealthDifference > 1000) {
+    winner = "buy";
+  } else if (wealthDifference < -1000) {
+    winner = "rent";
+  }
+
+  return {
+    monthlyMortgagePayment,
+    loanAmount,
+    totalRentPaid: last?.rentPaidCumulative ?? 0,
+    totalBuyPaid: last?.buyPaidCumulative ?? 0,
+    buyerNetWorth,
+    renterNetWorth,
+    wealthDifference,
+    winner,
+    breakEvenYear,
+    homeValueAtEnd: last?.homeValue ?? homePrice,
+    rows
+  };
+}
+
+export type EtfInput = {
+  initialAmount: number;
+  monthlyContribution: number;
+  years: number;
+  grossReturnPercent: number;
+  terPercent: number;
+};
+
+export type EtfYearRow = {
+  year: number;
+  balanceNet: number;
+  balanceGross: number;
+  invested: number;
+  feesImpact: number;
+};
+
+export type EtfResult = {
+  finalNet: number;
+  finalGross: number;
+  totalInvested: number;
+  profitNet: number;
+  yieldPercent: number;
+  feesImpact: number;
+  netReturnPercent: number;
+  rows: EtfYearRow[];
+};
+
+export function calculateEtf(input: EtfInput): EtfResult {
+  const years = Math.max(1, Math.floor(input.years));
+  const initialAmount = Math.max(0, input.initialAmount);
+  const monthlyContribution = Math.max(0, input.monthlyContribution);
+  const grossReturn = Math.max(0, input.grossReturnPercent) / 100;
+  const ter = Math.max(0, input.terPercent) / 100;
+
+  const monthlyGross = grossReturn / 12;
+  const monthlyNet = monthlyGross - ter / 12;
+
+  let balanceNet = initialAmount;
+  let balanceGross = initialAmount;
+  const rows: EtfYearRow[] = [];
+
+  for (let year = 1; year <= years; year += 1) {
+    for (let month = 0; month < 12; month += 1) {
+      balanceNet *= 1 + monthlyNet;
+      balanceNet += monthlyContribution;
+      balanceGross *= 1 + monthlyGross;
+      balanceGross += monthlyContribution;
+    }
+
+    const invested = initialAmount + monthlyContribution * 12 * year;
+    rows.push({
+      year,
+      balanceNet,
+      balanceGross,
+      invested,
+      feesImpact: balanceGross - balanceNet
+    });
+  }
+
+  const last = rows[rows.length - 1];
+  const finalNet = last?.balanceNet ?? initialAmount;
+  const finalGross = last?.balanceGross ?? initialAmount;
+  const totalInvested = last?.invested ?? initialAmount;
+  const profitNet = finalNet - totalInvested;
+  const yieldPercent = totalInvested > 0 ? (profitNet / totalInvested) * 100 : 0;
+  const feesImpact = finalGross - finalNet;
+  const netReturnPercent = Math.max(0, input.grossReturnPercent - input.terPercent);
+
+  return {
+    finalNet,
+    finalGross,
+    totalInvested,
+    profitNet,
+    yieldPercent,
+    feesImpact,
+    netReturnPercent,
+    rows
+  };
+}

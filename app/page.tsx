@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import CalculatorCard from "@/components/CalculatorCard";
+import { getSiteUrl } from "@/lib/site";
+
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: "Финансовые калькуляторы для инвесторов — бесплатно",
@@ -12,7 +15,7 @@ export const metadata: Metadata = {
     title: "Финансовые калькуляторы для инвесторов — бесплатно",
     description:
       "Калькуляторы сложного процента, FIRE, доходности ETF и других показателей. Бесплатно, без регистрации.",
-    url: "https://yourdomain.com/"
+    url: `${siteUrl}/`
   }
 };
 
@@ -28,12 +31,12 @@ const calculators = [
     href: "/fire-calculator"
   },
   {
-    title: "Калькулятор ETF (скоро)",
-    description: "Оценка доходности ETF и ребалансировки.",
+    title: "Калькулятор ETF",
+    description: "Оценка доходности ETF с учётом комиссии TER.",
     href: "/etf-calculator"
   },
   {
-    title: "Аренда vs ипотека (скоро)",
+    title: "Аренда vs ипотека",
     description: "Сравнение сценариев владения и аренды жилья.",
     href: "/rent-vs-buy"
   }
