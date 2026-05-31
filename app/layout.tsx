@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { brand } from "@/lib/brand";
 import { getSiteUrl } from "@/lib/site";
 import "@/styles/globals.css";
 
@@ -21,15 +22,24 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Финансовые калькуляторы",
-  description: "Калькуляторы для инвесторов на русском языке.",
+  title: {
+    default: brand.title,
+    template: `%s — ${brand.name}`
+  },
+  description: "Калькуляторы для инвесторов на русском языке: FIRE, сложный процент, ETF и аренда vs ипотека.",
+  applicationName: brand.name,
   openGraph: {
-    title: "Финансовые калькуляторы",
-    description: "Калькуляторы для инвесторов на русском языке.",
+    title: brand.title,
+    description: "Калькуляторы для инвесторов на русском языке: FIRE, сложный процент, ETF и аренда vs ипотека.",
     url: siteUrl,
-    siteName: "Финансовые калькуляторы",
+    siteName: brand.name,
     locale: "ru_RU",
     type: "website"
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: brand.title,
+    description: "Калькуляторы для инвесторов на русском языке: FIRE, сложный процент, ETF и аренда vs ипотека."
   }
 };
 

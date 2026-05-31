@@ -1,11 +1,20 @@
+import PageHeader from "@/components/PageHeader";
+
 export default function DisclaimerPage() {
   return (
     <div>
-      <h1 className="text-3xl font-semibold">Дисклеймер</h1>
-      <p className="mt-3">
-        Информация на сайте представлена в образовательных целях и не является индивидуальной инвестиционной
-        рекомендацией.
-      </p>
+      <PageHeader title="Дисклеймер" />
+
+      <div className="card-fintech space-y-4 p-6 text-sm leading-relaxed">
+        <p>
+          Информация на сайте представлена в образовательных целях и не является индивидуальной инвестиционной
+          рекомендацией.
+        </p>
+        <p className="text-text-muted">
+          Результаты калькуляторов основаны на введённых вами данных и допущениях. Фактическая доходность может
+          отличаться. Перед принятием финансовых решений проконсультируйтесь со специалистом.
+        </p>
+      </div>
     </div>
   );
 }

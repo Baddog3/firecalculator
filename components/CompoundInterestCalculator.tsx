@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import BrokerCta from "@/components/BrokerCta";
 import CalculatorSection from "@/components/CalculatorSection";
 import CompoundChart from "@/components/CompoundChart";
 import InputSlider from "@/components/InputSlider";
@@ -50,11 +51,7 @@ export default function CompoundInterestCalculator() {
   }));
 
   return (
-    <div className="space-y-8">
-      <div id="ad-top" className="min-h-10 border border-dashed border-border bg-bg-secondary p-2 text-xs text-text-muted">
-        Рекламный блок
-      </div>
-
+    <div className="space-y-6">
       <CalculatorSection title="Ваши вложения" description="Сколько уже есть и сколько добавляете каждый месяц.">
         <NumberField
           label="Начальная сумма ₽"
@@ -62,6 +59,7 @@ export default function CompoundInterestCalculator() {
           value={initialAmount}
           min={0}
           step={1000}
+          formatThousands
           onChange={setInitialAmount}
         />
         <NumberField
@@ -70,6 +68,7 @@ export default function CompoundInterestCalculator() {
           value={monthlyContribution}
           min={0}
           step={1000}
+          formatThousands
           onChange={setMonthlyContribution}
         />
       </CalculatorSection>
@@ -105,62 +104,61 @@ export default function CompoundInterestCalculator() {
             { value: "quarterly", label: "Ежеквартально" },
             { value: "monthly", label: "Ежемесячно" }
           ]}
+          className="sm:col-span-2"
         />
       </CalculatorSection>
 
-      <section>
-        <h2 className="mb-4 text-xl font-medium">Результаты</h2>
-        <div className="grid gap-3 sm:grid-cols-2">
+      <section className="space-y-3">
+        <h2 className="text-base font-semibold">Результаты</h2>
+        <ResultCard
+          variant="hero"
+          label="Итоговая сумма"
+          hint="Сколько будет на счёте в конце срока с учётом стартовой суммы, пополнений и начисленных процентов."
+          value={moneyFormat(result.total)}
+          subtitle={`Вложено ${moneyFormat(result.totalInvested)} · прибыль ${moneyFormat(result.profit)} · ${percentFormat(result.yieldPercent)}%`}
+        />
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           <ResultCard
-            label="Итоговая сумма"
-            hint="Сколько будет на счёте в конце срока с учётом стартовой суммы, пополнений и начисленных процентов."
-            value={moneyFormat(result.total)}
-            highlight
-          />
-          <ResultCard
+            variant="compact"
             label="Вложено"
             hint="Сумма ваших денег без учёта процентов: стартовый капитал + все ежемесячные пополнения."
             value={moneyFormat(result.totalInvested)}
           />
           <ResultCard
+            variant="compact"
             label="Заработано"
             hint="Чистая прибыль: итоговая сумма минус всё, что вы внесли своими деньгами."
             value={moneyFormat(result.profit)}
+            subtitleTone="success"
           />
           <ResultCard
+            variant="compact"
             label="Доходность"
             hint="Насколько выросли ваши вложения в процентах относительно суммы, которую вы внесли."
             value={`${percentFormat(result.yieldPercent)}%`}
+            className="col-span-2 sm:col-span-1"
           />
         </div>
       </section>
 
-      <div id="ad-mid" className="min-h-10 border border-dashed border-border bg-bg-secondary p-2 text-xs text-text-muted">
-        Рекламный блок
-      </div>
-
       <section>
-        <h2 className="mb-3 text-xl font-medium">Динамика капитала</h2>
+        <h2 className="mb-1 text-base font-semibold">Динамика капитала</h2>
         <p className="mb-3 text-sm text-text-muted">
-          Чёрная линия — с пополнениями, серая — только рост начальной суммы без новых взносов.
+          Красная линия — с пополнениями, серая — только рост начальной суммы без новых взносов.
         </p>
         <CompoundChart data={chartData} />
       </section>
 
       <section>
-        <button
-          type="button"
-          onClick={() => setShowTable((prev) => !prev)}
-          className="mb-3 border border-border px-3 py-2 text-sm"
-        >
+        <button type="button" onClick={() => setShowTable((prev) => !prev)} className="btn-fintech mb-3">
           {showTable ? "Скрыть таблицу по годам" : "Показать таблицу по годам"}
         </button>
 
         {showTable ? (
-          <div className="overflow-x-auto border border-border">
+          <div className="table-fintech">
             <table className="w-full border-collapse text-sm">
               <thead>
-                <tr className="bg-bg-secondary text-left">
+                <tr className="bg-stone-50 text-left">
                   <th className="border-b border-border px-3 py-2">Год</th>
                   <th className="border-b border-border px-3 py-2">Баланс</th>
                   <th className="border-b border-border px-3 py-2">Вложено</th>
@@ -183,16 +181,16 @@ export default function CompoundInterestCalculator() {
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-xl font-medium">Что важно знать о сложном проценте</h2>
-        <p>
+        <h2 className="text-base font-semibold">Что важно знать о сложном проценте</h2>
+        <p className="text-sm leading-relaxed">
           Сложный процент — это эффект, при котором прибыль начисляется не только на стартовый капитал, но и на уже
           полученные проценты. Поэтому капитал растёт ускоряющимися темпами на длинной дистанции.
         </p>
-        <p>
+        <p className="text-sm leading-relaxed">
           Для долгосрочного инвестора это ключевой механизм: регулярные пополнения и реинвестирование дают заметно
           больший результат, чем попытки угадать идеальную точку входа.
         </p>
-        <p>
+        <p className="text-sm leading-relaxed">
           Пример: 100 000 ₽ под 10% на 20 лет превращаются примерно в{" "}
           <span className="font-mono">
             {moneyFormat(
@@ -207,25 +205,16 @@ export default function CompoundInterestCalculator() {
           </span>{" "}
           даже без дополнительных вложений.
         </p>
-        <p>
+        <p className="text-sm leading-relaxed">
           Если хотите оценить, когда можно достичь финансовой независимости, используйте{" "}
-          <Link href="/fire-calculator" className="underline">
+          <Link href="/fire-calculator" className="link-fintech">
             FIRE-калькулятор
           </Link>
           .
         </p>
       </section>
 
-      <section className="rounded-none border border-border bg-bg-secondary p-4">
-        <p className="text-sm">Ищете брокера для инвестиций?</p>
-        <Link href="/blog/sravnenie-brokerov-evropa" className="mt-2 inline-block underline">
-          Сравнить брокеров →
-        </Link>
-      </section>
-
-      <div id="ad-bottom" className="min-h-10 border border-dashed border-border bg-bg-secondary p-2 text-xs text-text-muted">
-        Рекламный блок
-      </div>
+      <BrokerCta />
     </div>
   );
 }

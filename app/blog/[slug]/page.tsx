@@ -50,30 +50,33 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <div>
-      <Link href="/blog" className="mb-6 inline-block text-sm text-text-muted underline">
+      <Link
+        href="/blog"
+        className="mb-6 inline-block text-sm font-medium text-red-600 transition-colors hover:text-red-700"
+      >
         ← Все статьи
       </Link>
 
-      <header className="mb-8 border-b border-border pb-6">
-        <p className="mb-2 font-mono text-sm text-text-muted">{post.date}</p>
-        <h1 className="text-3xl font-semibold">{post.title}</h1>
-        <p className="mt-3 text-text-muted">{post.description}</p>
+      <header className="card-fintech mb-8 p-6">
+        <p className="mb-2 font-mono text-xs text-text-muted">{post.date}</p>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{post.title}</h1>
+        <p className="mt-3 text-sm leading-relaxed text-text-muted">{post.description}</p>
       </header>
 
       <BlogArticle content={post.content} />
 
-      <div id="ad-bottom" className="mt-8 min-h-10 border border-dashed border-border bg-bg-secondary p-2 text-xs text-text-muted">
-        Рекламный блок
-      </div>
-
       {related.length > 0 ? (
-        <section className="mt-10 border-t border-border pt-8">
-          <h2 className="mb-4 text-xl font-medium">Читайте также</h2>
-          <ul className="space-y-3">
+        <section className="mt-10">
+          <h2 className="mb-3 text-base font-semibold">Читайте также</h2>
+          <ul className="grid gap-3">
             {related.map((item) => (
               <li key={item.slug}>
-                <Link href={`/blog/${item.slug}`} className="underline">
-                  {item.title}
+                <Link
+                  href={`/blog/${item.slug}`}
+                  className="card-fintech group block p-4 transition-shadow hover:border-red-100 hover:shadow-md"
+                >
+                  <p className="text-sm font-medium transition-colors group-hover:text-red-600">{item.title}</p>
+                  <p className="mt-1 text-xs text-text-muted">{item.description}</p>
                 </Link>
               </li>
             ))}

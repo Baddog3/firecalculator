@@ -8,10 +8,14 @@ type CalculatorCardProps = {
 
 export default function CalculatorCard({ title, description, href }: CalculatorCardProps) {
   return (
-    <li className="border-b border-border py-4">
-      <Link href={href} className="block">
-        <p className="text-lg font-medium">{title}</p>
-        <p className="text-sm text-text-muted">{description}</p>
+    <li>
+      <Link
+        href={href}
+        className="card-fintech group block p-5 transition-shadow hover:border-red-100 hover:shadow-md"
+      >
+        <p className="font-semibold transition-colors group-hover:text-red-600">{title}</p>
+        <p className="mt-1.5 text-sm leading-relaxed text-text-muted">{description}</p>
+        <span className="mt-3 inline-block text-sm font-medium text-red-600">Открыть →</span>
       </Link>
     </li>
   );

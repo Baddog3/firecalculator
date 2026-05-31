@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import BrokerCta from "@/components/BrokerCta";
 import CalculatorSection from "@/components/CalculatorSection";
 import FireChart from "@/components/FireChart";
 import InputSlider from "@/components/InputSlider";
@@ -71,16 +72,21 @@ export default function FireCalculator() {
 
   const savingsGap = result.monthlySavingsNeeded - monthlySavingsCurrent;
 
-  return (
-    <div className="space-y-8">
-      <div
-        id="ad-top"
-        className="min-h-10 border border-dashed border-border bg-bg-secondary p-2 text-xs text-text-muted"
-      >
-        Рекламный блок
-      </div>
+  const savingsSubtitle =
+    savingsGap > 0
+      ? `Не хватает ${moneyFormat(savingsGap)}/мес до цели`
+      : savingsGap < 0
+        ? `Запас ${moneyFormat(Math.abs(savingsGap))}/мес`
+        : `До цели: ${result.yearsUntilRetirement} лет`;
 
-      <CalculatorSection title="Ваш профиль" description="Возраст, накопления и текущий уровень расходов.">
+  const savingsSubtitleTone = savingsGap > 0 ? "warning" : savingsGap < 0 ? "success" : "default";
+
+  return (
+    <div className="space-y-6">
+      <CalculatorSection
+        title="Ваш профиль"
+        description="Возраст, накопления и текущий уровень расходов."
+      >
         <NumberField
           label="Текущий возраст"
           hint="Сколько вам лет сейчас. От этого считается, сколько лет осталось до желаемого выхода."
@@ -105,6 +111,7 @@ export default function FireCalculator() {
           value={currentSavings}
           min={0}
           step={10000}
+          formatThousands
           onChange={setCurrentSavings}
         />
         <NumberField
@@ -113,6 +120,7 @@ export default function FireCalculator() {
           value={monthlyExpenses}
           min={0}
           step={1000}
+          formatThousands
           onChange={setMonthlyExpenses}
         />
         <NumberField
@@ -121,11 +129,16 @@ export default function FireCalculator() {
           value={monthlySavingsCurrent}
           min={0}
           step={1000}
+          formatThousands
           onChange={setMonthlySavingsCurrent}
+          className="sm:col-span-2"
         />
       </CalculatorSection>
 
-      <CalculatorSection title="Предположения" description="Ожидания по доходности, инфляции и правилу изъятия.">
+      <CalculatorSection
+        title="Предположения"
+        description="Ожидания по доходности, инфляции и правилу изъятия."
+      >
         <InputSlider
           label="Ожидаемая доходность"
           hint="Средняя годовая доходность инвестиций до налогов. Для глобального ETF часто используют 7–10%."
@@ -158,53 +171,47 @@ export default function FireCalculator() {
         />
       </CalculatorSection>
 
-      <section>
-        <h2 className="mb-4 text-xl font-medium">Результаты</h2>
-        <div className="grid gap-3 sm:grid-cols-2">
+      <section className="space-y-3">
+        <h2 className="text-base font-semibold">Результаты</h2>
+        <ResultCard
+          variant="hero"
+          label="FIRE-число"
+          hint="Размер капитала, которого нужно достичь, чтобы покрывать расходы выбранной ставкой изъятия."
+          value={moneyFormat(result.fireNumber)}
+          subtitle={`${yearsFormat(result.yearsToFire)} · ${moneyFormat(result.monthlySavingsNeeded)}/мес · выход в ${retirementAge} лет`}
+        />
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           <ResultCard
-            label="FIRE-число"
-            hint="Размер капитала, которого нужно достичь, чтобы покрывать расходы выбранной ставкой изъятия."
-            value={moneyFormat(result.fireNumber)}
-            highlight
-          />
-          <ResultCard
-            label="Нужно откладывать в месяц"
+            variant="compact"
+            label="Нужно откладывать"
             hint="Сумма ежемесячных взносов, чтобы успеть к желаемому возрасту при текущих накоплениях."
             value={moneyFormat(result.monthlySavingsNeeded)}
-            subtitle={
-              savingsGap > 0
-                ? `Не хватает ${moneyFormat(savingsGap)}/мес до цели`
-                : savingsGap < 0
-                  ? `Запас ${moneyFormat(Math.abs(savingsGap))}/мес`
-                  : `До цели: ${result.yearsUntilRetirement} лет`
-            }
+            subtitle={savingsSubtitle}
+            subtitleTone={savingsSubtitleTone}
           />
           <ResultCard
+            variant="compact"
             label="Лет до FIRE"
             hint="Через сколько лет достигнете FIRE-цели при текущем темпе отложений и доходности."
             value={yearsFormat(result.yearsToFire)}
             subtitle={`При ${moneyFormat(monthlySavingsCurrent)}/мес`}
           />
           <ResultCard
-            label="Прогноз портфеля к выходу"
+            variant="compact"
+            label="Портфель к выходу"
             hint="Сколько будет на счёте к желаемому возрасту, если откладывать рекомендованную сумму каждый месяц."
             value={moneyFormat(result.portfolioAtRetirement)}
             subtitle={`Возраст ${retirementAge} лет`}
+            className="col-span-2 sm:col-span-1"
           />
         </div>
       </section>
 
-      <div
-        id="ad-mid"
-        className="min-h-10 border border-dashed border-border bg-bg-secondary p-2 text-xs text-text-muted"
-      >
-        Рекламный блок
-      </div>
-
       <section>
-        <h2 className="mb-3 text-xl font-medium">Рост портфеля к FIRE-цели</h2>
+        <h2 className="mb-1 text-base font-semibold">Рост портфеля к FIRE-цели</h2>
         <p className="mb-3 text-sm text-text-muted">
-          Пунктирная линия — целевой капитал. Точка — момент достижения FIRE при рекомендованных ежемесячных взносах.
+          Пунктирная линия — целевой капитал. Точка — момент достижения FIRE при рекомендованных ежемесячных
+          взносах.
         </p>
         <FireChart
           data={chartData}
@@ -214,15 +221,15 @@ export default function FireCalculator() {
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-xl font-medium">Что такое FIRE</h2>
-        <p>
+        <h2 className="text-base font-semibold">Что такое FIRE</h2>
+        <p className="text-sm leading-relaxed">
           FIRE (Financial Independence, Retire Early) — подход, при котором вы накапливаете инвестиционный капитал,
           достаточный для покрытия расходов без активного заработка. Цель — не «перестать работать завтра», а получить
           финансовую свободу выбора.
         </p>
 
-        <h3 className="text-lg font-medium">Правило 4%: откуда оно взялось</h3>
-        <p>
+        <h3 className="text-sm font-semibold">Правило 4%: откуда оно взялось</h3>
+        <p className="text-sm leading-relaxed">
           Правило появилось из исследования Trinity Study: при изъятии около 4% капитала в год портфель часто
           сохранялся на длинном горизонте. На практике это означает, что для годовых расходов в{" "}
           <span className="font-mono">{moneyFormat(result.annualExpensesAtRetirement)}</span> нужен капитал порядка{" "}
@@ -230,35 +237,23 @@ export default function FireCalculator() {
           %.
         </p>
 
-        <h3 className="text-lg font-medium">Применимость в России и Европе</h3>
-        <p>
+        <h3 className="text-sm font-semibold">Применимость в России и Европе</h3>
+        <p className="text-sm leading-relaxed">
           В России и Европе логика та же, но важны локальные факторы: инфляция, валюта расходов, налоги и доступные
           инструменты (брокерские счета, ETF, пенсионные программы). Калькулятор учитывает инфляцию расходов к моменту
           выхода на FIRE, поэтому цель ближе к реальности, чем расчёт «в сегодняшних рублях».
         </p>
 
-        <p>
+        <p className="text-sm leading-relaxed">
           Чтобы оценить, как капитал растёт с регулярными пополнениями, используйте{" "}
-          <Link href="/compound-interest" className="underline">
+          <Link href="/compound-interest" className="link-fintech">
             калькулятор сложного процента
           </Link>
           .
         </p>
       </section>
 
-      <section className="rounded-none border border-border bg-bg-secondary p-4">
-        <p className="text-sm">Ищете брокера для инвестиций?</p>
-        <Link href="/blog/sravnenie-brokerov-evropa" className="mt-2 inline-block underline">
-          Сравнить брокеров →
-        </Link>
-      </section>
-
-      <div
-        id="ad-bottom"
-        className="min-h-10 border border-dashed border-border bg-bg-secondary p-2 text-xs text-text-muted"
-      >
-        Рекламный блок
-      </div>
+      <BrokerCta />
     </div>
   );
 }

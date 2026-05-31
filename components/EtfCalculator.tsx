@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import BrokerCta from "@/components/BrokerCta";
 import CalculatorSection from "@/components/CalculatorSection";
 import CompoundChart from "@/components/CompoundChart";
 import InputSlider from "@/components/InputSlider";
@@ -49,21 +50,15 @@ export default function EtfCalculator() {
   }));
 
   return (
-    <div className="space-y-8">
-      <div
-        id="ad-top"
-        className="min-h-10 border border-dashed border-border bg-bg-secondary p-2 text-xs text-text-muted"
-      >
-        Рекламный блок
-      </div>
-
-      <CalculatorSection title="Ваши вложения">
+    <div className="space-y-6">
+      <CalculatorSection title="Ваши вложения" description="Стартовая сумма, пополнения и срок.">
         <NumberField
           label="Начальная сумма ₽"
           hint="Сколько уже инвестировано в ETF или готово к первой покупке."
           value={initialAmount}
           min={0}
           step={1000}
+          formatThousands
           onChange={setInitialAmount}
         />
         <NumberField
@@ -72,6 +67,7 @@ export default function EtfCalculator() {
           value={monthlyContribution}
           min={0}
           step={1000}
+          formatThousands
           onChange={setMonthlyContribution}
         />
         <InputSlider
@@ -86,7 +82,7 @@ export default function EtfCalculator() {
         />
       </CalculatorSection>
 
-      <CalculatorSection title="Доходность и комиссии">
+      <CalculatorSection title="Доходность и комиссии" description="Ожидания по доходности и TER фонда.">
         <InputSlider
           label="Ожидаемая доходность (брутто)"
           hint="Средняя доходность фонда до вычета комиссии и налогов. Для широкого индексного ETF часто берут 8–12%."
@@ -109,47 +105,45 @@ export default function EtfCalculator() {
         />
       </CalculatorSection>
 
-      <section>
-        <h2 className="mb-4 text-xl font-medium">Результаты</h2>
-        <div className="grid gap-3 sm:grid-cols-2">
+      <section className="space-y-3">
+        <h2 className="text-base font-semibold">Результаты</h2>
+        <ResultCard
+          variant="hero"
+          label="Итоговая сумма"
+          hint="Портфель в конце срока с учётом комиссии фонда TER."
+          value={moneyFormat(result.finalNet)}
+          subtitle={`Вложено ${moneyFormat(result.totalInvested)} · прибыль ${moneyFormat(result.profitNet)} · ${percentFormat(result.yieldPercent)}%`}
+        />
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           <ResultCard
-            label="Итоговая сумма"
-            hint="Портфель в конце срока с учётом комиссии фонда TER."
-            value={moneyFormat(result.finalNet)}
-            highlight
+            variant="compact"
+            label="Прибыль"
+            hint="Итог минус вложенные своими деньгами средства."
+            value={moneyFormat(result.profitNet)}
+            subtitleTone="success"
           />
-          <ResultCard label="Вложено" hint="Все ваши пополнения и стартовая сумма." value={moneyFormat(result.totalInvested)} />
-          <ResultCard label="Прибыль" hint="Итог минус вложенные своими деньгами средства." value={moneyFormat(result.profitNet)} />
           <ResultCard
-            label="Доходность"
-            hint="Процент роста относительно суммы ваших вложений."
-            value={`${percentFormat(result.yieldPercent)}%`}
-          />
-          <ResultCard
-            label="Потери на комиссии"
-            hint="Разница между сценарием с TER и без него — «стоимость» низкой/высокой комиссии фонда."
+            variant="compact"
+            label="Потери на TER"
+            hint="Разница между сценарием с TER и без него — «стоимость» комиссии фонда."
             value={moneyFormat(result.feesImpact)}
             subtitle={`Чистая доходность ≈ ${percentFormat(result.netReturnPercent)}%`}
+            subtitleTone="warning"
           />
           <ResultCard
+            variant="compact"
             label="Без учёта TER"
             hint="Гипотетический результат при той же доходности, но без комиссии фонда."
             value={moneyFormat(result.finalGross)}
+            className="col-span-2 sm:col-span-1"
           />
         </div>
       </section>
 
-      <div
-        id="ad-mid"
-        className="min-h-10 border border-dashed border-border bg-bg-secondary p-2 text-xs text-text-muted"
-      >
-        Рекламный блок
-      </div>
-
       <section>
-        <h2 className="mb-3 text-xl font-medium">Рост портфеля ETF</h2>
+        <h2 className="mb-1 text-base font-semibold">Рост портфеля ETF</h2>
         <p className="mb-3 text-sm text-text-muted">
-          Чёрная линия — с учётом TER, серая — тот же сценарий без комиссии фонда.
+          Красная линия — с учётом TER, серая — тот же сценарий без комиссии фонда.
         </p>
         <CompoundChart
           data={chartData}
@@ -159,19 +153,15 @@ export default function EtfCalculator() {
       </section>
 
       <section>
-        <button
-          type="button"
-          onClick={() => setShowTable((prev) => !prev)}
-          className="mb-3 border border-border px-3 py-2 text-sm"
-        >
+        <button type="button" onClick={() => setShowTable((prev) => !prev)} className="btn-fintech mb-3">
           {showTable ? "Скрыть таблицу по годам" : "Показать таблицу по годам"}
         </button>
 
         {showTable ? (
-          <div className="overflow-x-auto border border-border">
+          <div className="table-fintech">
             <table className="w-full border-collapse text-sm">
               <thead>
-                <tr className="bg-bg-secondary text-left">
+                <tr className="bg-stone-50 text-left">
                   <th className="border-b border-border px-3 py-2">Год</th>
                   <th className="border-b border-border px-3 py-2">С TER</th>
                   <th className="border-b border-border px-3 py-2">Без TER</th>
@@ -196,34 +186,22 @@ export default function EtfCalculator() {
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-xl font-medium">ETF и комиссии</h2>
-        <p>
+        <h2 className="text-base font-semibold">ETF и комиссии</h2>
+        <p className="text-sm leading-relaxed">
           ETF — это фонд, который повторяет индекс (например, акций США или облигаций). Вы покупаете одну «корзину»
           через брокера, а не десятки отдельных бумаг. Для долгосрочного инвестора важны диверсификация и низкие
           издержки.
         </p>
-        <p>
+        <p className="text-sm leading-relaxed">
           Подробнее — в статье{" "}
-          <Link href="/blog/chto-takoe-etf" className="underline">
+          <Link href="/blog/chto-takoe-etf" className="link-fintech">
             «Что такое ETF»
           </Link>
           .
         </p>
       </section>
 
-      <section className="rounded-none border border-border bg-bg-secondary p-4">
-        <p className="text-sm">Ищете брокера для инвестиций?</p>
-        <Link href="/blog/sravnenie-brokerov-evropa" className="mt-2 inline-block underline">
-          Сравнить брокеров →
-        </Link>
-      </section>
-
-      <div
-        id="ad-bottom"
-        className="min-h-10 border border-dashed border-border bg-bg-secondary p-2 text-xs text-text-muted"
-      >
-        Рекламный блок
-      </div>
+      <BrokerCta />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import FireCalculator from "@/components/FireCalculator";
+import PageHeader from "@/components/PageHeader";
 import { getSiteUrl } from "@/lib/site";
 
 const siteUrl = getSiteUrl();
@@ -22,7 +23,10 @@ export const metadata: Metadata = {
 export default function FireCalculatorPage() {
   return (
     <div>
-      <h1 className="mb-6 text-3xl font-semibold">FIRE-калькулятор</h1>
+      <PageHeader
+        title="FIRE-калькулятор"
+        description="Рассчитайте цель капитала и срок выхода на финансовую независимость."
+      />
       <FireCalculator />
     </div>
   );

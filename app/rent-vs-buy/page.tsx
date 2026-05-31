@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeader from "@/components/PageHeader";
 import RentVsBuyCalculator from "@/components/RentVsBuyCalculator";
 import { getSiteUrl } from "@/lib/site";
 
@@ -22,7 +23,10 @@ export const metadata: Metadata = {
 export default function RentVsBuyPage() {
   return (
     <div>
-      <h1 className="mb-6 text-3xl font-semibold">Аренда vs ипотека</h1>
+      <PageHeader
+        title="Аренда vs ипотека"
+        description="Сравните покупку квартиры в ипотеку и аренду с инвестированием взноса."
+      />
       <RentVsBuyCalculator />
     </div>
   );

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import EtfCalculator from "@/components/EtfCalculator";
+import PageHeader from "@/components/PageHeader";
 import { getSiteUrl } from "@/lib/site";
 
 const siteUrl = getSiteUrl();
@@ -22,7 +23,10 @@ export const metadata: Metadata = {
 export default function EtfCalculatorPage() {
   return (
     <div>
-      <h1 className="mb-6 text-3xl font-semibold">Калькулятор ETF</h1>
+      <PageHeader
+        title="Калькулятор ETF"
+        description="Оцените рост портфеля ETF с учётом комиссии TER и ежемесячных пополнений."
+      />
       <EtfCalculator />
     </div>
   );

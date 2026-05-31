@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import CompoundInterestCalculator from "@/components/CompoundInterestCalculator";
+import PageHeader from "@/components/PageHeader";
 import { getSiteUrl } from "@/lib/site";
 
 const siteUrl = getSiteUrl();
@@ -22,7 +23,10 @@ export const metadata: Metadata = {
 export default function CompoundInterestPage() {
   return (
     <div>
-      <h1 className="mb-6 text-3xl font-semibold">Калькулятор сложного процента</h1>
+      <PageHeader
+        title="Калькулятор сложного процента"
+        description="Рассчитайте рост капитала с учётом регулярных пополнений и реинвестирования процентов."
+      />
       <CompoundInterestCalculator />
     </div>
   );

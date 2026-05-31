@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import BrokerCta from "@/components/BrokerCta";
 import CalculatorSection from "@/components/CalculatorSection";
 import InputSlider from "@/components/InputSlider";
 import NumberField from "@/components/NumberField";
@@ -83,18 +84,17 @@ export default function RentVsBuyCalculator() {
   const breakEvenText =
     result.breakEvenYear === null ? "Не наступает за период" : `${result.breakEvenYear} год`;
 
-  const priceToRent =
-    monthlyRent > 0 ? homePrice / (monthlyRent * 12) : null;
+  const priceToRent = monthlyRent > 0 ? homePrice / (monthlyRent * 12) : null;
+
+  const wealthSubtitle =
+    result.wealthDifference >= 0
+      ? "в пользу покупки к концу периода"
+      : "в пользу аренды к концу периода";
+
+  const wealthSubtitleTone = result.winner === "tie" ? "default" : result.winner === "buy" ? "success" : "warning";
 
   return (
-    <div className="space-y-8">
-      <div
-        id="ad-top"
-        className="min-h-10 border border-dashed border-border bg-bg-secondary p-2 text-xs text-text-muted"
-      >
-        Рекламный блок
-      </div>
-
+    <div className="space-y-6">
       <CalculatorSection title="Покупка жилья" description="Стоимость квартиры, взнос и условия ипотеки.">
         <NumberField
           label="Стоимость жилья ₽"
@@ -102,6 +102,7 @@ export default function RentVsBuyCalculator() {
           value={homePrice}
           min={0}
           step={100000}
+          formatThousands
           onChange={setHomePriceSafe}
         />
         <InputSlider
@@ -120,6 +121,7 @@ export default function RentVsBuyCalculator() {
           value={downPayment}
           min={0}
           step={50000}
+          formatThousands
           helperText={`${percentFormat(downPaymentPercent)}% от стоимости`}
           onChange={(value) => {
             if (homePrice > 0) {
@@ -129,7 +131,7 @@ export default function RentVsBuyCalculator() {
         />
         <InputSlider
           label="Ставка ипотеки"
-          hint="Годовая процентная ставка по кредиту. Указывайте актуальную ставку вашего банка."
+          hint="Годовая процентная ставка по кредиту. Укажите актуальную ставку вашего банка."
           value={mortgageRatePercent}
           min={1}
           max={25}
@@ -166,6 +168,7 @@ export default function RentVsBuyCalculator() {
           value={monthlyRent}
           min={0}
           step={1000}
+          formatThousands
           onChange={setMonthlyRent}
           helperText={
             priceToRent !== null
@@ -218,64 +221,61 @@ export default function RentVsBuyCalculator() {
         />
       </CalculatorSection>
 
-      <section>
-        <h2 className="mb-4 text-xl font-medium">Результаты</h2>
-        <div className="grid gap-3 sm:grid-cols-2">
+      <section className="space-y-3">
+        <h2 className="text-base font-semibold">Результаты</h2>
+        <ResultCard
+          variant="hero"
+          label="Выгоднее"
+          hint="Какой сценарий даёт больший чистый капитал к концу выбранного горизонта."
+          value={winnerLabel(result.winner)}
+          subtitle={`Разница ${moneyFormat(Math.abs(result.wealthDifference))} · ${wealthSubtitle}`}
+          subtitleTone={wealthSubtitleTone}
+        />
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           <ResultCard
-            label="Выгоднее"
-            hint="Какой сценарий даёт больший чистый капитал к концу выбранного горизонта."
-            value={winnerLabel(result.winner)}
-            highlight
-          />
-          <ResultCard
-            label="Разница в капитале"
-            hint="Насколько один сценарий опережает другой в рублях."
-            value={moneyFormat(Math.abs(result.wealthDifference))}
-            subtitle={
-              result.wealthDifference >= 0
-                ? "в пользу покупки к концу периода"
-                : "в пользу аренды к концу периода"
-            }
-          />
-          <ResultCard
+            variant="compact"
             label="Платёж по ипотеке"
             hint="Фиксированный ежемесячный платёж по аннуитетной схеме при заданной ставке и сроке."
             value={moneyFormat(result.monthlyMortgagePayment)}
           />
           <ResultCard
+            variant="compact"
             label="Точка безубыточности"
             hint="Год, когда капитал покупателя догоняет капитал арендатора при заданных вводных."
             value={breakEvenText}
           />
-          <ResultCard label="Итого аренда" hint="Сумма всех арендных платежей за период." value={moneyFormat(result.totalRentPaid)} />
           <ResultCard
+            variant="compact"
+            label="Итого аренда"
+            hint="Сумма всех арендных платежей за период."
+            value={moneyFormat(result.totalRentPaid)}
+            className="col-span-2 sm:col-span-1"
+          />
+          <ResultCard
+            variant="compact"
             label="Капитал покупателя"
             hint="Доля в жилье: стоимость минус остаток ипотеки."
             value={moneyFormat(result.buyerNetWorth)}
           />
           <ResultCard
+            variant="compact"
             label="Капитал арендатора"
             hint="Инвестиционный портфель при сценарии «снимать и инвестировать»."
             value={moneyFormat(result.renterNetWorth)}
           />
           <ResultCard
+            variant="compact"
             label="Стоимость жилья"
             hint="Прогнозная цена квартиры через выбранный срок."
             value={moneyFormat(result.homeValueAtEnd)}
             subtitle="через выбранный срок"
+            className="col-span-2 sm:col-span-1"
           />
         </div>
       </section>
 
-      <div
-        id="ad-mid"
-        className="min-h-10 border border-dashed border-border bg-bg-secondary p-2 text-xs text-text-muted"
-      >
-        Рекламный блок
-      </div>
-
       <section>
-        <h2 className="mb-3 text-xl font-medium">Капитал: покупка vs аренда</h2>
+        <h2 className="mb-1 text-base font-semibold">Капитал: покупка vs аренда</h2>
         <p className="mb-3 text-sm text-text-muted">
           Сравнение чистого капитала: доля в жилье у покупателя и портфель у арендатора.
         </p>
@@ -283,19 +283,15 @@ export default function RentVsBuyCalculator() {
       </section>
 
       <section>
-        <button
-          type="button"
-          onClick={() => setShowTable((prev) => !prev)}
-          className="mb-3 border border-border px-3 py-2 text-sm"
-        >
+        <button type="button" onClick={() => setShowTable((prev) => !prev)} className="btn-fintech mb-3">
           {showTable ? "Скрыть таблицу по годам" : "Показать таблицу по годам"}
         </button>
 
         {showTable ? (
-          <div className="overflow-x-auto border border-border">
+          <div className="table-fintech">
             <table className="w-full border-collapse text-sm">
               <thead>
-                <tr className="bg-bg-secondary text-left">
+                <tr className="bg-stone-50 text-left">
                   <th className="border-b border-border px-3 py-2">Год</th>
                   <th className="border-b border-border px-3 py-2">Покупка</th>
                   <th className="border-b border-border px-3 py-2">Аренда</th>
@@ -320,29 +316,17 @@ export default function RentVsBuyCalculator() {
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-xl font-medium">Как читать результат</h2>
-        <p>
+        <h2 className="text-base font-semibold">Как читать результат</h2>
+        <p className="text-sm leading-relaxed">
           Подробный разбор — в статье{" "}
-          <Link href="/blog/arenda-vs-ipoteka" className="underline">
+          <Link href="/blog/arenda-vs-ipoteka" className="link-fintech">
             «Аренда или ипотека — что выгоднее»
           </Link>
           .
         </p>
       </section>
 
-      <section className="rounded-none border border-border bg-bg-secondary p-4">
-        <p className="text-sm">Ищете брокера для инвестиций?</p>
-        <Link href="/blog/sravnenie-brokerov-evropa" className="mt-2 inline-block underline">
-          Сравнить брокеров →
-        </Link>
-      </section>
-
-      <div
-        id="ad-bottom"
-        className="min-h-10 border border-dashed border-border bg-bg-secondary p-2 text-xs text-text-muted"
-      >
-        Рекламный блок
-      </div>
+      <BrokerCta />
     </div>
   );
 }

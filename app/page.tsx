@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import CalculatorCard from "@/components/CalculatorCard";
+import PageHeader from "@/components/PageHeader";
 import { getSiteUrl } from "@/lib/site";
 
 const siteUrl = getSiteUrl();
@@ -45,14 +46,14 @@ const calculators = [
 export default function HomePage() {
   return (
     <div>
-      <h1 className="text-3xl font-semibold">Финансовые калькуляторы</h1>
-      <p className="mt-3 max-w-2xl text-text-muted">
-        Простые инструменты для инвесторов. Считайте доходность, FIRE-число и многое другое.
-      </p>
+      <PageHeader
+        title="Финансовые калькуляторы"
+        description="Простые инструменты для инвесторов. Считайте доходность, FIRE-число и многое другое."
+      />
 
-      <section className="mt-8">
-        <h2 className="mb-3 text-xl font-medium">Калькуляторы</h2>
-        <ul>
+      <section>
+        <h2 className="mb-3 text-base font-semibold">Калькуляторы</h2>
+        <ul className="grid gap-3">
           {calculators.map((calc) => (
             <CalculatorCard key={calc.href} {...calc} />
           ))}

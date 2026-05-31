@@ -1,4 +1,7 @@
+"use client";
+
 import FieldLabel from "@/components/FieldLabel";
+import { useNumberInput } from "@/hooks/useNumberInput";
 
 type InputSliderProps = {
   label: string;
@@ -9,6 +12,7 @@ type InputSliderProps = {
   step?: number;
   suffix?: string;
   onChange: (value: number) => void;
+  className?: string;
 };
 
 export default function InputSlider({
@@ -19,26 +23,29 @@ export default function InputSlider({
   max,
   step = 1,
   suffix,
-  onChange
+  onChange,
+  className
 }: InputSliderProps) {
   const inputId = `${label.replace(/\s+/g, "-").toLowerCase()}-number`;
+  const input = useNumberInput({ value, onChange, min, max });
 
   return (
-    <div className="rounded-none border border-border bg-bg-secondary p-4">
-      <div className="mb-3 flex items-center justify-between gap-3">
+    <div className={`space-y-2 sm:col-span-2 ${className ?? ""}`}>
+      <div className="flex items-center justify-between gap-3">
         <FieldLabel label={label} hint={hint} htmlFor={inputId} />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <input
             id={inputId}
-            type="number"
-            value={Number.isFinite(value) ? value : 0}
-            min={min}
-            max={max}
+            type="text"
+            inputMode="decimal"
+            value={input.text}
             step={step}
-            onChange={(event) => onChange(Number(event.target.value))}
-            className="w-28 border border-border bg-white px-2 py-1 text-right font-mono text-sm"
+            onChange={(event) => input.onChange(event.target.value)}
+            onFocus={input.onFocus}
+            onBlur={input.onBlur}
+            className="input-fintech-sm"
           />
-          {suffix ? <span className="text-sm text-text-muted">{suffix}</span> : null}
+          {suffix ? <span className="text-xs text-text-muted">{suffix}</span> : null}
         </div>
       </div>
       <input
@@ -48,7 +55,7 @@ export default function InputSlider({
         max={max}
         step={step}
         onChange={(event) => onChange(Number(event.target.value))}
-        className="w-full accent-accent"
+        className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-stone-200 accent-red-600 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-red-600"
         aria-label={label}
       />
     </div>

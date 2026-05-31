@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import BlogPostList from "@/components/BlogPostList";
+import PageHeader from "@/components/PageHeader";
 import { getAllPosts } from "@/lib/blog";
 import { getSiteUrl } from "@/lib/site";
 
@@ -23,13 +24,13 @@ export default function BlogPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-semibold">Блог</h1>
-      <p className="mt-3 max-w-2xl text-text-muted">
-        Статьи об инвестициях, FIRE, ETF и личных финансах для России и Европы.
-      </p>
+      <PageHeader
+        title="Блог"
+        description="Статьи об инвестициях, FIRE, ETF и личных финансах для России и Европы."
+      />
 
-      <section className="mt-8">
-        <h2 className="mb-3 text-xl font-medium">Все статьи</h2>
+      <section>
+        <h2 className="mb-3 text-base font-semibold">Все статьи</h2>
         <BlogPostList posts={posts} />
       </section>
     </div>

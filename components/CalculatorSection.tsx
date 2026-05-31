@@ -8,12 +8,14 @@ type CalculatorSectionProps = {
 
 export default function CalculatorSection({ title, description, children }: CalculatorSectionProps) {
   return (
-    <section className="space-y-4">
+    <section className="space-y-3">
       <div>
-        <h2 className="text-lg font-medium">{title}</h2>
-        {description ? <p className="mt-1 text-sm text-text-muted">{description}</p> : null}
+        <h2 className="text-base font-semibold">{title}</h2>
+        {description ? <p className="mt-0.5 text-sm text-text-muted">{description}</p> : null}
       </div>
-      <div className="grid gap-4">{children}</div>
+      <div className="card-fintech p-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">{children}</div>
+      </div>
     </section>
   );
 }

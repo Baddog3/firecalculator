@@ -15,7 +15,8 @@ const config: Config = {
         "text-muted": "var(--text-muted)",
         accent: "var(--accent)",
         "accent-hover": "var(--accent-hover)",
-        success: "var(--success)"
+        success: "var(--success)",
+        warning: "var(--warning)"
       },
       fontFamily: {
         sans: ["var(--font-inter)", "sans-serif"],

@@ -1,4 +1,7 @@
+"use client";
+
 import FieldLabel from "@/components/FieldLabel";
+import { useNumberInput } from "@/hooks/useNumberInput";
 
 type NumberFieldProps = {
   label: string;
@@ -10,6 +13,8 @@ type NumberFieldProps = {
   suffix?: string;
   helperText?: string;
   onChange: (value: number) => void;
+  formatThousands?: boolean;
+  className?: string;
 };
 
 export default function NumberField({
@@ -21,29 +26,33 @@ export default function NumberField({
   step = 1,
   suffix,
   helperText,
-  onChange
+  onChange,
+  formatThousands = false,
+  className
 }: NumberFieldProps) {
   const inputId = label.replace(/\s+/g, "-").toLowerCase();
+  const input = useNumberInput({ value, onChange, min, max, formatThousands });
 
   return (
-    <div className="rounded-none border border-border bg-bg-secondary p-4">
-      <div className="mb-2">
+    <div className={className}>
+      <div className="mb-1">
         <FieldLabel label={label} hint={hint} htmlFor={inputId} />
       </div>
       <div className="flex items-center gap-2">
         <input
           id={inputId}
-          type="number"
-          value={value}
-          min={min}
-          max={max}
+          type="text"
+          inputMode={formatThousands ? "numeric" : "decimal"}
+          value={input.text}
           step={step}
-          onChange={(event) => onChange(Number(event.target.value))}
-          className="w-full border border-border bg-white px-3 py-2 font-mono"
+          onChange={(event) => input.onChange(event.target.value)}
+          onFocus={input.onFocus}
+          onBlur={input.onBlur}
+          className="input-fintech"
         />
-        {suffix ? <span className="shrink-0 text-sm text-text-muted">{suffix}</span> : null}
+        {suffix ? <span className="shrink-0 text-xs text-text-muted">{suffix}</span> : null}
       </div>
-      {helperText ? <p className="mt-2 text-xs text-text-muted">{helperText}</p> : null}
+      {helperText ? <p className="mt-1 text-xs text-text-muted">{helperText}</p> : null}
     </div>
   );
 }
