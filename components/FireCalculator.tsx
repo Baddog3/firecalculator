@@ -230,7 +230,7 @@ export default function FireCalculator() {
 
       <section className="rounded-none border border-border bg-bg-secondary p-4">
         <p className="text-sm">Ищете брокера для инвестиций?</p>
-        <Link href="/blog" className="mt-2 inline-block underline">
+        <Link href="/blog/sravnenie-brokerov-evropa" className="mt-2 inline-block underline">
           Сравнить брокеров →
         </Link>
       </section>
