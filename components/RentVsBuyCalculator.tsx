@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import CalculatorSection from "@/components/CalculatorSection";
 import InputSlider from "@/components/InputSlider";
+import NumberField from "@/components/NumberField";
 import RentVsBuyChart from "@/components/RentVsBuyChart";
 import ResultCard from "@/components/ResultCard";
 import { calculateRentVsBuy } from "@/lib/calculations";
@@ -14,39 +16,20 @@ const moneyFormat = (value: number) =>
     maximumFractionDigits: 0
   }).format(value);
 
+const percentFormat = (value: number) =>
+  new Intl.NumberFormat("ru-RU", {
+    maximumFractionDigits: 1
+  }).format(value);
+
 const winnerLabel = (winner: "buy" | "rent" | "tie") => {
   if (winner === "buy") return "Покупка";
   if (winner === "rent") return "Аренда";
   return "Примерно одинаково";
 };
 
-type NumberFieldProps = {
-  label: string;
-  value: number;
-  min?: number;
-  step?: number;
-  onChange: (value: number) => void;
-};
-
-function NumberField({ label, value, min = 0, step = 1, onChange }: NumberFieldProps) {
-  return (
-    <div className="rounded-none border border-border bg-bg-secondary p-4">
-      <label className="mb-2 block text-sm">{label}</label>
-      <input
-        type="number"
-        value={value}
-        min={min}
-        step={step}
-        onChange={(event) => onChange(Number(event.target.value))}
-        className="w-full border border-border bg-white px-3 py-2 font-mono"
-      />
-    </div>
-  );
-}
-
 export default function RentVsBuyCalculator() {
   const [homePrice, setHomePrice] = useState(8000000);
-  const [downPayment, setDownPayment] = useState(1600000);
+  const [downPaymentPercent, setDownPaymentPercent] = useState(20);
   const [mortgageRatePercent, setMortgageRatePercent] = useState(16);
   const [mortgageYears, setMortgageYears] = useState(20);
   const [comparisonYears, setComparisonYears] = useState(10);
@@ -56,6 +39,12 @@ export default function RentVsBuyCalculator() {
   const [maintenancePercent, setMaintenancePercent] = useState(1);
   const [investmentReturnPercent, setInvestmentReturnPercent] = useState(10);
   const [showTable, setShowTable] = useState(false);
+
+  const downPayment = Math.round((homePrice * downPaymentPercent) / 100);
+
+  const setHomePriceSafe = (value: number) => {
+    setHomePrice(Math.max(0, value));
+  };
 
   const result = useMemo(
     () =>
@@ -92,9 +81,10 @@ export default function RentVsBuyCalculator() {
   }));
 
   const breakEvenText =
-    result.breakEvenYear === null
-      ? "Не наступает за период"
-      : `${result.breakEvenYear} год`;
+    result.breakEvenYear === null ? "Не наступает за период" : `${result.breakEvenYear} год`;
+
+  const priceToRent =
+    monthlyRent > 0 ? homePrice / (monthlyRent * 12) : null;
 
   return (
     <div className="space-y-8">
@@ -105,101 +95,141 @@ export default function RentVsBuyCalculator() {
         Рекламный блок
       </div>
 
-      <section className="space-y-4">
-        <div className="grid gap-4">
-          <NumberField
-            label="Стоимость жилья ₽"
-            value={homePrice}
-            min={0}
-            step={100000}
-            onChange={setHomePrice}
-          />
-          <NumberField
-            label="Первоначальный взнос ₽"
-            value={downPayment}
-            min={0}
-            step={50000}
-            onChange={setDownPayment}
-          />
-          <InputSlider
-            label="Ставка ипотеки"
-            value={mortgageRatePercent}
-            min={1}
-            max={25}
-            step={0.1}
-            suffix="%"
-            onChange={setMortgageRatePercent}
-          />
-          <InputSlider
-            label="Срок ипотеки"
-            value={mortgageYears}
-            min={1}
-            max={30}
-            step={1}
-            suffix="лет"
-            onChange={setMortgageYears}
-          />
-          <InputSlider
-            label="Горизонт сравнения"
-            value={comparisonYears}
-            min={1}
-            max={30}
-            step={1}
-            suffix="лет"
-            onChange={setComparisonYears}
-          />
-          <NumberField
-            label="Аренда в месяц ₽"
-            value={monthlyRent}
-            min={0}
-            step={1000}
-            onChange={setMonthlyRent}
-          />
-          <InputSlider
-            label="Рост аренды"
-            value={rentIncreasePercent}
-            min={0}
-            max={15}
-            step={0.1}
-            suffix="%"
-            onChange={setRentIncreasePercent}
-          />
-          <InputSlider
-            label="Рост цены жилья"
-            value={homeAppreciationPercent}
-            min={0}
-            max={15}
-            step={0.1}
-            suffix="%"
-            onChange={setHomeAppreciationPercent}
-          />
-          <InputSlider
-            label="Расходы на содержание"
-            value={maintenancePercent}
-            min={0}
-            max={5}
-            step={0.1}
-            suffix="% в год"
-            onChange={setMaintenancePercent}
-          />
-          <InputSlider
-            label="Доходность инвестиций (арендатор)"
-            value={investmentReturnPercent}
-            min={0}
-            max={20}
-            step={0.1}
-            suffix="%"
-            onChange={setInvestmentReturnPercent}
-          />
-        </div>
-      </section>
+      <CalculatorSection title="Покупка жилья" description="Стоимость квартиры, взнос и условия ипотеки.">
+        <NumberField
+          label="Стоимость жилья ₽"
+          hint="Полная цена квартиры или дома, которую рассматриваете к покупке."
+          value={homePrice}
+          min={0}
+          step={100000}
+          onChange={setHomePriceSafe}
+        />
+        <InputSlider
+          label="Первоначальный взнос"
+          hint="Доля цены, которую платите сразу из своих денег. Остальное — сумма ипотеки."
+          value={downPaymentPercent}
+          min={0}
+          max={90}
+          step={1}
+          suffix="%"
+          onChange={setDownPaymentPercent}
+        />
+        <NumberField
+          label="Сумма взноса ₽"
+          hint="Рассчитывается автоматически из процента. Эти деньги у арендатора могли бы работать в инвестициях."
+          value={downPayment}
+          min={0}
+          step={50000}
+          helperText={`${percentFormat(downPaymentPercent)}% от стоимости`}
+          onChange={(value) => {
+            if (homePrice > 0) {
+              setDownPaymentPercent(Math.min(90, Math.max(0, (value / homePrice) * 100)));
+            }
+          }}
+        />
+        <InputSlider
+          label="Ставка ипотеки"
+          hint="Годовая процентная ставка по кредиту. Указывайте актуальную ставку вашего банка."
+          value={mortgageRatePercent}
+          min={1}
+          max={25}
+          step={0.1}
+          suffix="%"
+          onChange={setMortgageRatePercent}
+        />
+        <InputSlider
+          label="Срок ипотеки"
+          hint="На сколько лет оформляется кредит. Влияет на размер ежемесячного платежа."
+          value={mortgageYears}
+          min={1}
+          max={30}
+          step={1}
+          suffix="лет"
+          onChange={setMortgageYears}
+        />
+      </CalculatorSection>
+
+      <CalculatorSection title="Аренда и горизонт" description="Сценарий, если продолжаете снимать жильё.">
+        <InputSlider
+          label="Горизонт сравнения"
+          hint="На сколько лет вперёд сравниваем покупку и аренду. Часто берут 5, 10 или 15 лет."
+          value={comparisonYears}
+          min={1}
+          max={30}
+          step={1}
+          suffix="лет"
+          onChange={setComparisonYears}
+        />
+        <NumberField
+          label="Аренда в месяц ₽"
+          hint="Сколько стоит снять похожую квартиру сейчас."
+          value={monthlyRent}
+          min={0}
+          step={1000}
+          onChange={setMonthlyRent}
+          helperText={
+            priceToRent !== null
+              ? `P/R = ${percentFormat(priceToRent)} (до 15 — покупка, выше 20 — аренда)`
+              : undefined
+          }
+        />
+        <InputSlider
+          label="Рост аренды"
+          hint="На сколько в среднем в год может дорожать аренда. Ориентир — инфляция или рынок вашего города."
+          value={rentIncreasePercent}
+          min={0}
+          max={15}
+          step={0.1}
+          suffix="%"
+          onChange={setRentIncreasePercent}
+        />
+      </CalculatorSection>
+
+      <CalculatorSection title="Допущения рынка">
+        <InputSlider
+          label="Рост цены жилья"
+          hint="Ожидаемый средний рост стоимости недвижимости в год. Не гарантия, а допущение для модели."
+          value={homeAppreciationPercent}
+          min={0}
+          max={15}
+          step={0.1}
+          suffix="%"
+          onChange={setHomeAppreciationPercent}
+        />
+        <InputSlider
+          label="Расходы на содержание"
+          hint="Ремонт, коммунальные сверх базовых, налоги и прочее в % от стоимости жилья в год."
+          value={maintenancePercent}
+          min={0}
+          max={5}
+          step={0.1}
+          suffix="% в год"
+          onChange={setMaintenancePercent}
+        />
+        <InputSlider
+          label="Доходность инвестиций (арендатор)"
+          hint="Если снимаете, взнос и разница в платежах могут идти в портфель. Укажите ожидаемую доходность."
+          value={investmentReturnPercent}
+          min={0}
+          max={20}
+          step={0.1}
+          suffix="%"
+          onChange={setInvestmentReturnPercent}
+        />
+      </CalculatorSection>
 
       <section>
         <h2 className="mb-4 text-xl font-medium">Результаты</h2>
         <div className="grid gap-3 sm:grid-cols-2">
-          <ResultCard label="Выгоднее" value={winnerLabel(result.winner)} highlight />
+          <ResultCard
+            label="Выгоднее"
+            hint="Какой сценарий даёт больший чистый капитал к концу выбранного горизонта."
+            value={winnerLabel(result.winner)}
+            highlight
+          />
           <ResultCard
             label="Разница в капитале"
+            hint="Насколько один сценарий опережает другой в рублях."
             value={moneyFormat(Math.abs(result.wealthDifference))}
             subtitle={
               result.wealthDifference >= 0
@@ -207,12 +237,33 @@ export default function RentVsBuyCalculator() {
                 : "в пользу аренды к концу периода"
             }
           />
-          <ResultCard label="Платёж по ипотеке" value={moneyFormat(result.monthlyMortgagePayment)} />
-          <ResultCard label="Точка безубыточности" value={breakEvenText} />
-          <ResultCard label="Итого аренда" value={moneyFormat(result.totalRentPaid)} />
-          <ResultCard label="Капитал покупателя" value={moneyFormat(result.buyerNetWorth)} />
-          <ResultCard label="Капитал арендатора" value={moneyFormat(result.renterNetWorth)} />
-          <ResultCard label="Стоимость жилья" value={moneyFormat(result.homeValueAtEnd)} subtitle="через выбранный срок" />
+          <ResultCard
+            label="Платёж по ипотеке"
+            hint="Фиксированный ежемесячный платёж по аннуитетной схеме при заданной ставке и сроке."
+            value={moneyFormat(result.monthlyMortgagePayment)}
+          />
+          <ResultCard
+            label="Точка безубыточности"
+            hint="Год, когда капитал покупателя догоняет капитал арендатора при заданных вводных."
+            value={breakEvenText}
+          />
+          <ResultCard label="Итого аренда" hint="Сумма всех арендных платежей за период." value={moneyFormat(result.totalRentPaid)} />
+          <ResultCard
+            label="Капитал покупателя"
+            hint="Доля в жилье: стоимость минус остаток ипотеки."
+            value={moneyFormat(result.buyerNetWorth)}
+          />
+          <ResultCard
+            label="Капитал арендатора"
+            hint="Инвестиционный портфель при сценарии «снимать и инвестировать»."
+            value={moneyFormat(result.renterNetWorth)}
+          />
+          <ResultCard
+            label="Стоимость жилья"
+            hint="Прогнозная цена квартиры через выбранный срок."
+            value={moneyFormat(result.homeValueAtEnd)}
+            subtitle="через выбранный срок"
+          />
         </div>
       </section>
 
@@ -226,8 +277,7 @@ export default function RentVsBuyCalculator() {
       <section>
         <h2 className="mb-3 text-xl font-medium">Капитал: покупка vs аренда</h2>
         <p className="mb-3 text-sm text-text-muted">
-          Сравнение чистого капитала: доля в жилье у покупателя и инвестиционный портфель у арендатора (взнос + разница
-          в платежах).
+          Сравнение чистого капитала: доля в жилье у покупателя и портфель у арендатора.
         </p>
         <RentVsBuyChart data={chartData} />
       </section>
@@ -272,27 +322,9 @@ export default function RentVsBuyCalculator() {
       <section className="space-y-4">
         <h2 className="text-xl font-medium">Как читать результат</h2>
         <p>
-          Калькулятор сравнивает два сценария на одном горизонте: вы покупаете жильё в ипотеку или снимаете и
-          инвестируете первоначальный взнос плюс разницу в ежемесячных расходах. У покупателя капитал — это доля в
-          квартире (цена минус остаток долга), у арендатора — портфель на бирже.
-        </p>
-        <p>
-          В России на результат сильно влияют ставка ипотеки, темп роста аренды и ожидаемая доходность альтернативных
-          вложений. При высокой ставке по кредиту аренда с инвестированием взноса часто выглядит выгоднее на горизонте
-          5–10 лет.
-        </p>
-        <p>
-          Расходы на ремонт и содержание учтены как доля от стоимости жилья в год. Это упрощение: в реальности будут
-          разовые траты и налоги — используйте калькулятор для ориентира, а не как точный финансовый план.
-        </p>
-        <p>
-          Для расчёта накоплений без жилья попробуйте{" "}
-          <Link href="/compound-interest" className="underline">
-            калькулятор сложного процента
-          </Link>{" "}
-          или{" "}
-          <Link href="/fire-calculator" className="underline">
-            FIRE-калькулятор
+          Подробный разбор — в статье{" "}
+          <Link href="/blog/arenda-vs-ipoteka" className="underline">
+            «Аренда или ипотека — что выгоднее»
           </Link>
           .
         </p>

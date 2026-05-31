@@ -73,6 +73,7 @@ export type FireInput = {
   retirementAge: number;
   currentSavings: number;
   monthlyExpenses: number;
+  monthlySavingsCurrent: number;
   annualReturnPercent: number;
   withdrawalRatePercent: number;
   inflationPercent: number;
@@ -182,6 +183,7 @@ export function calculateFire(input: FireInput): FireResult {
 
   const monthlyExpenses = Math.max(0, input.monthlyExpenses);
   const currentSavings = Math.max(0, input.currentSavings);
+  const monthlySavingsCurrent = Math.max(0, input.monthlySavingsCurrent);
 
   const annualExpensesAtRetirement =
     monthlyExpenses * 12 * Math.pow(1 + inflation, yearsUntilRetirement);
@@ -194,7 +196,12 @@ export function calculateFire(input: FireInput): FireResult {
     yearsUntilRetirement
   );
 
-  const yearsToFire = yearsToReachTarget(currentSavings, fireNumber, annualReturn, 0);
+  const yearsToFire = yearsToReachTarget(
+    currentSavings,
+    fireNumber,
+    annualReturn,
+    monthlySavingsCurrent
+  );
 
   const rows = simulateFirePortfolio(
     currentAge,

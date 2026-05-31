@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import CalculatorSection from "@/components/CalculatorSection";
 import CompoundChart from "@/components/CompoundChart";
 import InputSlider from "@/components/InputSlider";
+import NumberField from "@/components/NumberField";
 import ResultCard from "@/components/ResultCard";
+import SelectField from "@/components/SelectField";
 import { CompoundFrequency, calculateCompoundInterest } from "@/lib/calculations";
 
 const moneyFormat = (value: number) =>
@@ -52,74 +55,83 @@ export default function CompoundInterestCalculator() {
         Рекламный блок
       </div>
 
-      <section className="space-y-4">
-        <div className="grid gap-4">
-          <div className="rounded-none border border-border bg-bg-secondary p-4">
-            <label className="mb-2 block text-sm">Начальная сумма ₽</label>
-            <input
-              type="number"
-              value={initialAmount}
-              min={0}
-              step={1000}
-              onChange={(event) => setInitialAmount(Number(event.target.value))}
-              className="w-full border border-border bg-white px-3 py-2 font-mono"
-            />
-          </div>
+      <CalculatorSection title="Ваши вложения" description="Сколько уже есть и сколько добавляете каждый месяц.">
+        <NumberField
+          label="Начальная сумма ₽"
+          hint="Деньги, которые уже лежат на счёте или в портфеле в момент старта расчёта."
+          value={initialAmount}
+          min={0}
+          step={1000}
+          onChange={setInitialAmount}
+        />
+        <NumberField
+          label="Ежемесячное пополнение"
+          hint="Фиксированная сумма, которую планируете добавлять каждый месяц на протяжении всего срока."
+          value={monthlyContribution}
+          min={0}
+          step={1000}
+          onChange={setMonthlyContribution}
+        />
+      </CalculatorSection>
 
-          <div className="rounded-none border border-border bg-bg-secondary p-4">
-            <label className="mb-2 block text-sm">Ежемесячное пополнение</label>
-            <input
-              type="number"
-              value={monthlyContribution}
-              min={0}
-              step={1000}
-              onChange={(event) => setMonthlyContribution(Number(event.target.value))}
-              className="w-full border border-border bg-white px-3 py-2 font-mono"
-            />
-          </div>
-
-          <InputSlider
-            label="Годовая доходность"
-            value={annualRatePercent}
-            min={0}
-            max={30}
-            step={0.1}
-            suffix="%"
-            onChange={setAnnualRatePercent}
-          />
-
-          <InputSlider
-            label="Срок инвестирования"
-            value={years}
-            min={1}
-            max={50}
-            step={1}
-            suffix="лет"
-            onChange={setYears}
-          />
-
-          <div className="rounded-none border border-border bg-bg-secondary p-4">
-            <label className="mb-2 block text-sm">Периодичность начисления</label>
-            <select
-              value={frequency}
-              onChange={(event) => setFrequency(event.target.value as CompoundFrequency)}
-              className="w-full border border-border bg-white px-3 py-2"
-            >
-              <option value="yearly">Ежегодно</option>
-              <option value="quarterly">Ежеквартально</option>
-              <option value="monthly">Ежемесячно</option>
-            </select>
-          </div>
-        </div>
-      </section>
+      <CalculatorSection title="Условия роста" description="Ожидания по доходности и сроку инвестирования.">
+        <InputSlider
+          label="Годовая доходность"
+          hint="Средняя ожидаемая доходность в год до налогов. Для консервативного сценария часто берут 6–8%, для акций — около 10%."
+          value={annualRatePercent}
+          min={0}
+          max={30}
+          step={0.1}
+          suffix="%"
+          onChange={setAnnualRatePercent}
+        />
+        <InputSlider
+          label="Срок инвестирования"
+          hint="На сколько лет вперёд считаем. Чем длиннее срок, тем сильнее проявляется эффект сложного процента."
+          value={years}
+          min={1}
+          max={50}
+          step={1}
+          suffix="лет"
+          onChange={setYears}
+        />
+        <SelectField
+          label="Периодичность начисления"
+          hint="Как часто проценты «прибавляются» к капиталу. Чем чаще начисление, тем чуть выше итог при той же ставке."
+          value={frequency}
+          onChange={(value) => setFrequency(value as CompoundFrequency)}
+          options={[
+            { value: "yearly", label: "Ежегодно" },
+            { value: "quarterly", label: "Ежеквартально" },
+            { value: "monthly", label: "Ежемесячно" }
+          ]}
+        />
+      </CalculatorSection>
 
       <section>
         <h2 className="mb-4 text-xl font-medium">Результаты</h2>
         <div className="grid gap-3 sm:grid-cols-2">
-          <ResultCard label="Итоговая сумма" value={moneyFormat(result.total)} highlight />
-          <ResultCard label="Вложено" value={moneyFormat(result.totalInvested)} />
-          <ResultCard label="Заработано" value={moneyFormat(result.profit)} />
-          <ResultCard label="Доходность" value={`${percentFormat(result.yieldPercent)}%`} />
+          <ResultCard
+            label="Итоговая сумма"
+            hint="Сколько будет на счёте в конце срока с учётом стартовой суммы, пополнений и начисленных процентов."
+            value={moneyFormat(result.total)}
+            highlight
+          />
+          <ResultCard
+            label="Вложено"
+            hint="Сумма ваших денег без учёта процентов: стартовый капитал + все ежемесячные пополнения."
+            value={moneyFormat(result.totalInvested)}
+          />
+          <ResultCard
+            label="Заработано"
+            hint="Чистая прибыль: итоговая сумма минус всё, что вы внесли своими деньгами."
+            value={moneyFormat(result.profit)}
+          />
+          <ResultCard
+            label="Доходность"
+            hint="Насколько выросли ваши вложения в процентах относительно суммы, которую вы внесли."
+            value={`${percentFormat(result.yieldPercent)}%`}
+          />
         </div>
       </section>
 
@@ -129,6 +141,9 @@ export default function CompoundInterestCalculator() {
 
       <section>
         <h2 className="mb-3 text-xl font-medium">Динамика капитала</h2>
+        <p className="mb-3 text-sm text-text-muted">
+          Чёрная линия — с пополнениями, серая — только рост начальной суммы без новых взносов.
+        </p>
         <CompoundChart data={chartData} />
       </section>
 
@@ -170,7 +185,7 @@ export default function CompoundInterestCalculator() {
       <section className="space-y-4">
         <h2 className="text-xl font-medium">Что важно знать о сложном проценте</h2>
         <p>
-          Сложный процент - это эффект, при котором прибыль начисляется не только на стартовый капитал, но и на уже
+          Сложный процент — это эффект, при котором прибыль начисляется не только на стартовый капитал, но и на уже
           полученные проценты. Поэтому капитал растёт ускоряющимися темпами на длинной дистанции.
         </p>
         <p>
@@ -179,13 +194,17 @@ export default function CompoundInterestCalculator() {
         </p>
         <p>
           Пример: 100 000 ₽ под 10% на 20 лет превращаются примерно в{" "}
-          <span className="font-mono">{moneyFormat(calculateCompoundInterest({
-            initialAmount: 100000,
-            monthlyContribution: 0,
-            annualRatePercent: 10,
-            years: 20,
-            frequency: "yearly"
-          }).total)}</span>{" "}
+          <span className="font-mono">
+            {moneyFormat(
+              calculateCompoundInterest({
+                initialAmount: 100000,
+                monthlyContribution: 0,
+                annualRatePercent: 10,
+                years: 20,
+                frequency: "yearly"
+              }).total
+            )}
+          </span>{" "}
           даже без дополнительных вложений.
         </p>
         <p>

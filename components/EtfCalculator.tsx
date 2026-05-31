@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import CalculatorSection from "@/components/CalculatorSection";
 import CompoundChart from "@/components/CompoundChart";
 import InputSlider from "@/components/InputSlider";
+import NumberField from "@/components/NumberField";
 import ResultCard from "@/components/ResultCard";
 import { calculateEtf } from "@/lib/calculations";
 
@@ -19,30 +21,6 @@ const percentFormat = (value: number) =>
     minimumFractionDigits: 1,
     maximumFractionDigits: 1
   }).format(value);
-
-type NumberFieldProps = {
-  label: string;
-  value: number;
-  min?: number;
-  step?: number;
-  onChange: (value: number) => void;
-};
-
-function NumberField({ label, value, min = 0, step = 1, onChange }: NumberFieldProps) {
-  return (
-    <div className="rounded-none border border-border bg-bg-secondary p-4">
-      <label className="mb-2 block text-sm">{label}</label>
-      <input
-        type="number"
-        value={value}
-        min={min}
-        step={step}
-        onChange={(event) => onChange(Number(event.target.value))}
-        className="w-full border border-border bg-white px-3 py-2 font-mono"
-      />
-    </div>
-  );
-}
 
 export default function EtfCalculator() {
   const [initialAmount, setInitialAmount] = useState(100000);
@@ -79,68 +57,84 @@ export default function EtfCalculator() {
         Рекламный блок
       </div>
 
-      <section className="space-y-4">
-        <div className="grid gap-4">
-          <NumberField
-            label="Начальная сумма ₽"
-            value={initialAmount}
-            min={0}
-            step={1000}
-            onChange={setInitialAmount}
-          />
-          <NumberField
-            label="Ежемесячное пополнение ₽"
-            value={monthlyContribution}
-            min={0}
-            step={1000}
-            onChange={setMonthlyContribution}
-          />
-          <InputSlider
-            label="Ожидаемая доходность (брутто)"
-            value={grossReturnPercent}
-            min={0}
-            max={25}
-            step={0.1}
-            suffix="%"
-            onChange={setGrossReturnPercent}
-          />
-          <InputSlider
-            label="Комиссия фонда (TER)"
-            value={terPercent}
-            min={0}
-            max={3}
-            step={0.05}
-            suffix="%"
-            onChange={setTerPercent}
-          />
-          <InputSlider
-            label="Срок инвестирования"
-            value={years}
-            min={1}
-            max={40}
-            step={1}
-            suffix="лет"
-            onChange={setYears}
-          />
-        </div>
-      </section>
+      <CalculatorSection title="Ваши вложения">
+        <NumberField
+          label="Начальная сумма ₽"
+          hint="Сколько уже инвестировано в ETF или готово к первой покупке."
+          value={initialAmount}
+          min={0}
+          step={1000}
+          onChange={setInitialAmount}
+        />
+        <NumberField
+          label="Ежемесячное пополнение ₽"
+          hint="Регулярная сумма докупок ETF, например через автоплатёж у брокера."
+          value={monthlyContribution}
+          min={0}
+          step={1000}
+          onChange={setMonthlyContribution}
+        />
+        <InputSlider
+          label="Срок инвестирования"
+          hint="На сколько лет планируете держать стратегию. ETF обычно выбирают для горизонта от 5–7 лет."
+          value={years}
+          min={1}
+          max={40}
+          step={1}
+          suffix="лет"
+          onChange={setYears}
+        />
+      </CalculatorSection>
+
+      <CalculatorSection title="Доходность и комиссии">
+        <InputSlider
+          label="Ожидаемая доходность (брутто)"
+          hint="Средняя доходность фонда до вычета комиссии и налогов. Для широкого индексного ETF часто берут 8–12%."
+          value={grossReturnPercent}
+          min={0}
+          max={25}
+          step={0.1}
+          suffix="%"
+          onChange={setGrossReturnPercent}
+        />
+        <InputSlider
+          label="Комиссия фонда (TER)"
+          hint="Total Expense Ratio — годовая комиссия управляющей компании. У популярных ETF обычно 0,07–0,3%."
+          value={terPercent}
+          min={0}
+          max={3}
+          step={0.05}
+          suffix="%"
+          onChange={setTerPercent}
+        />
+      </CalculatorSection>
 
       <section>
         <h2 className="mb-4 text-xl font-medium">Результаты</h2>
         <div className="grid gap-3 sm:grid-cols-2">
-          <ResultCard label="Итоговая сумма" value={moneyFormat(result.finalNet)} highlight />
-          <ResultCard label="Вложено" value={moneyFormat(result.totalInvested)} />
-          <ResultCard label="Прибыль" value={moneyFormat(result.profitNet)} />
-          <ResultCard label="Доходность" value={`${percentFormat(result.yieldPercent)}%`} />
+          <ResultCard
+            label="Итоговая сумма"
+            hint="Портфель в конце срока с учётом комиссии фонда TER."
+            value={moneyFormat(result.finalNet)}
+            highlight
+          />
+          <ResultCard label="Вложено" hint="Все ваши пополнения и стартовая сумма." value={moneyFormat(result.totalInvested)} />
+          <ResultCard label="Прибыль" hint="Итог минус вложенные своими деньгами средства." value={moneyFormat(result.profitNet)} />
+          <ResultCard
+            label="Доходность"
+            hint="Процент роста относительно суммы ваших вложений."
+            value={`${percentFormat(result.yieldPercent)}%`}
+          />
           <ResultCard
             label="Потери на комиссии"
+            hint="Разница между сценарием с TER и без него — «стоимость» низкой/высокой комиссии фонда."
             value={moneyFormat(result.feesImpact)}
             subtitle={`Чистая доходность ≈ ${percentFormat(result.netReturnPercent)}%`}
           />
           <ResultCard
             label="Без учёта TER"
+            hint="Гипотетический результат при той же доходности, но без комиссии фонда."
             value={moneyFormat(result.finalGross)}
-            subtitle="гипотетический брутто-сценарий"
           />
         </div>
       </section>
@@ -209,22 +203,9 @@ export default function EtfCalculator() {
           издержки.
         </p>
         <p>
-          TER (Total Expense Ratio) — годовая комиссия фонда. При TER 0,2% и ожидаемой доходности 10% чистая
-          доходность близка к 9,8%. На длинном горизонте разница между TER 0,2% и 1% может стоить сотен тысяч
-          рублей — калькулятор показывает этот эффект.
-        </p>
-        <p>
-          Доходность в калькуляторе — ориентир, не гарантия. Рынок бывает волатильным: в отдельные годы портфель
-          может проседать, даже если средняя доходность за 15 лет положительная.
-        </p>
-        <p>
-          Для общего роста капитала с пополнениями смотрите{" "}
-          <Link href="/compound-interest" className="underline">
-            калькулятор сложного процента
-          </Link>
-          , для цели финансовой независимости —{" "}
-          <Link href="/fire-calculator" className="underline">
-            FIRE-калькулятор
+          Подробнее — в статье{" "}
+          <Link href="/blog/chto-takoe-etf" className="underline">
+            «Что такое ETF»
           </Link>
           .
         </p>
