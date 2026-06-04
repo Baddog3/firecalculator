@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Literata } from "next/font/google";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import YandexMetrika from "@/components/YandexMetrika";
 import { brand } from "@/lib/brand";
 import { getSiteUrl } from "@/lib/site";
 import "@/styles/globals.css";
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${inter.variable} ${literata.variable} ${jetbrainsMono.variable} min-h-screen bg-bg font-sans text-text antialiased`}
       >
+        <YandexMetrika />
         <Header />
         <main>{children}</main>
         <Footer />

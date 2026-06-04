@@ -27,13 +27,20 @@ npm run dev
 ## Production-сборка (статический экспорт)
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://firecalc.ru npm run build
+NEXT_PUBLIC_SITE_URL=https://firecalc.ru NEXT_PUBLIC_YM_ID=109655149 npm run build
 ```
 
 Готовые файлы — в папке `out/`. Заливка на FirstByte: `/www/firecalc.ru/`.
 
+Скопируйте `.env.example` в `.env.local` для локальной разработки.
+
 ## Переменные окружения
 
-```
-NEXT_PUBLIC_SITE_URL=https://firecalc.ru
-```
+| Переменная | Описание |
+|------------|----------|
+| `NEXT_PUBLIC_SITE_URL` | Канонический URL сайта (sitemap, Open Graph) |
+| `NEXT_PUBLIC_YM_ID` | ID счётчика [Яндекс.Метрики](https://metrika.yandex.ru/) (по умолчанию `109655149`) |
+
+Счётчик подключается в корневом `app/layout.tsx` и действует на всех страницах. При клиентской навигации (`next/link`) отправляется дополнительный просмотр через `ym(..., "hit", url)`.
+
+Проверка после деплоя: отчёты в Метрике → «Посещаемость», или расширение Yandex Metrica Debugger в браузере.
