@@ -82,7 +82,7 @@ export default function FireCalculator() {
   const savingsSubtitleTone = savingsGap > 0 ? "warning" : savingsGap < 0 ? "success" : "default";
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-block">
       <CalculatorSection
         title="Ваш профиль"
         description="Возраст, накопления и текущий уровень расходов."
@@ -171,8 +171,8 @@ export default function FireCalculator() {
         />
       </CalculatorSection>
 
-      <section className="space-y-3">
-        <h2 className="text-base font-semibold">Результаты</h2>
+      <section className="flex flex-col gap-6">
+        <h2 className="text-xl font-extrabold sm:text-2xl">Результаты</h2>
         <ResultCard
           variant="hero"
           label="FIRE-число"
@@ -180,7 +180,7 @@ export default function FireCalculator() {
           value={moneyFormat(result.fireNumber)}
           subtitle={`${yearsFormat(result.yearsToFire)} · ${moneyFormat(result.monthlySavingsNeeded)}/мес · выход в ${retirementAge} лет`}
         />
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        <div className="grid-symmetric grid grid-cols-2 sm:grid-cols-3">
           <ResultCard
             variant="compact"
             label="Нужно откладывать"
@@ -207,12 +207,14 @@ export default function FireCalculator() {
         </div>
       </section>
 
-      <section>
-        <h2 className="mb-1 text-base font-semibold">Рост портфеля к FIRE-цели</h2>
-        <p className="mb-3 text-sm text-text-muted">
-          Пунктирная линия — целевой капитал. Точка — момент достижения FIRE при рекомендованных ежемесячных
-          взносах.
-        </p>
+      <section className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-xl font-extrabold sm:text-2xl">Рост портфеля к FIRE-цели</h2>
+          <p className="mt-2 text-sm text-text-muted">
+            Пунктирная линия — целевой капитал. Точка — момент достижения FIRE при рекомендованных ежемесячных
+            взносах.
+          </p>
+        </div>
         <FireChart
           data={chartData}
           fireTarget={Math.round(result.fireNumber)}
@@ -220,9 +222,9 @@ export default function FireCalculator() {
         />
       </section>
 
-      <section className="space-y-4">
-        <h2 className="text-base font-semibold">Что такое FIRE</h2>
-        <p className="text-sm leading-relaxed">
+      <section className="flex flex-col gap-6">
+        <h2 className="text-xl font-extrabold sm:text-2xl">Что такое FIRE</h2>
+        <p className="text-base leading-relaxed">
           FIRE (Financial Independence, Retire Early) — подход, при котором вы накапливаете инвестиционный капитал,
           достаточный для покрытия расходов без активного заработка. Цель — не «перестать работать завтра», а получить
           финансовую свободу выбора.

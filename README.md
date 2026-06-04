@@ -24,19 +24,16 @@ npm run dev
 3. Если порт занят: `npm run dev -- -p 3001` и откройте http://localhost:3001
 4. После установки skills (папка `.agents`) перезапустите сервер: `Ctrl+C`, затем снова `npm run dev`.
 
-## Production-сборка
+## Production-сборка (статический экспорт)
 
 ```bash
-npm run build
-npm start
+NEXT_PUBLIC_SITE_URL=https://firecalc.ru npm run build
 ```
 
-## Vercel
+Готовые файлы — в папке `out/`. Заливка на FirstByte: `/www/firecalc.ru/`.
 
-В **Settings → Environment Variables** добавьте:
+## Переменные окружения
 
 ```
-NEXT_PUBLIC_SITE_URL=https://firecalculator-doir.vercel.app
+NEXT_PUBLIC_SITE_URL=https://firecalc.ru
 ```
-
-При подключении своего домена замените на `https://fincalc.ru` (или ваш домен).

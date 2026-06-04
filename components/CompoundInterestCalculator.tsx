@@ -51,7 +51,7 @@ export default function CompoundInterestCalculator() {
   }));
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-block">
       <CalculatorSection title="Ваши вложения" description="Сколько уже есть и сколько добавляете каждый месяц.">
         <NumberField
           label="Начальная сумма ₽"
@@ -108,8 +108,8 @@ export default function CompoundInterestCalculator() {
         />
       </CalculatorSection>
 
-      <section className="space-y-3">
-        <h2 className="text-base font-semibold">Результаты</h2>
+      <section className="flex flex-col gap-6">
+        <h2 className="text-xl font-extrabold sm:text-2xl">Результаты</h2>
         <ResultCard
           variant="hero"
           label="Итоговая сумма"
@@ -158,7 +158,7 @@ export default function CompoundInterestCalculator() {
           <div className="table-fintech">
             <table className="w-full border-collapse text-sm">
               <thead>
-                <tr className="bg-stone-50 text-left">
+                <tr className="bg-accent/10 text-left">
                   <th className="border-b border-border px-3 py-2">Год</th>
                   <th className="border-b border-border px-3 py-2">Баланс</th>
                   <th className="border-b border-border px-3 py-2">Вложено</th>

@@ -2,11 +2,11 @@ import PageHeader from "@/components/PageHeader";
 
 export default function DisclaimerPage() {
   return (
-    <div>
+    <div className="container-main page-shell">
       <PageHeader title="Дисклеймер" />
 
-      <div className="card-fintech space-y-4 p-6 text-sm leading-relaxed">
-        <p>
+      <div className="card-fintech mx-auto max-w-3xl space-y-6 p-card text-base leading-relaxed">
+        <p className="font-semibold">
           Информация на сайте представлена в образовательных целях и не является индивидуальной инвестиционной
           рекомендацией.
         </p>

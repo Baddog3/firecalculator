@@ -22,8 +22,9 @@ export const metadata: Metadata = {
 
 export default function EtfCalculatorPage() {
   return (
-    <div>
+    <div className="container-main page-shell">
       <PageHeader
+        badge="ETF"
         title="Калькулятор ETF"
         description="Оцените рост портфеля ETF с учётом комиссии TER и ежемесячных пополнений."
       />

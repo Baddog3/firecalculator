@@ -21,7 +21,7 @@ export default function AppleIcon() {
       >
         <span
           style={{
-            color: "#ffffff",
+            color: brand.text,
             fontSize: 96,
             fontWeight: 700,
             fontFamily: "ui-monospace, monospace",
@@ -32,7 +32,7 @@ export default function AppleIcon() {
         </span>
         <span
           style={{
-            color: "#fecaca",
+            color: brand.textMuted,
             fontSize: 18,
             fontWeight: 600,
             fontFamily: "ui-monospace, monospace",

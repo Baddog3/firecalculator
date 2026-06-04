@@ -49,34 +49,31 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
     .slice(0, 3);
 
   return (
-    <div>
+    <div className="container-main page-shell">
       <Link
         href="/blog"
-        className="mb-6 inline-block text-sm font-medium text-red-600 transition-colors hover:text-red-700"
+        className="mb-block inline-flex items-center gap-2 text-sm font-bold transition-colors hover:text-text-muted"
       >
         ← Все статьи
       </Link>
 
-      <header className="card-fintech mb-8 p-6">
-        <p className="mb-2 font-mono text-xs text-text-muted">{post.date}</p>
-        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{post.title}</h1>
-        <p className="mt-3 text-sm leading-relaxed text-text-muted">{post.description}</p>
+      <header className="card-fintech mx-auto mb-block max-w-3xl p-card text-center">
+        <p className="mb-4 font-mono text-xs font-semibold text-text-muted">{post.date}</p>
+        <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{post.title}</h1>
+        <p className="mt-5 text-base leading-relaxed text-text-muted">{post.description}</p>
       </header>
 
       <BlogArticle content={post.content} />
 
       {related.length > 0 ? (
-        <section className="mt-10">
-          <h2 className="mb-3 text-base font-semibold">Читайте также</h2>
-          <ul className="grid gap-3">
+        <section className="mt-block">
+          <h2 className="section-head section-title text-center">Читайте также</h2>
+          <ul className="grid-symmetric grid sm:grid-cols-3">
             {related.map((item) => (
-              <li key={item.slug}>
-                <Link
-                  href={`/blog/${item.slug}`}
-                  className="card-fintech group block p-4 transition-shadow hover:border-red-100 hover:shadow-md"
-                >
-                  <p className="text-sm font-medium transition-colors group-hover:text-red-600">{item.title}</p>
-                  <p className="mt-1 text-xs text-text-muted">{item.description}</p>
+              <li key={item.slug} className="flex">
+                <Link href={`/blog/${item.slug}`} className="card-fintech-hover group flex w-full flex-col p-card">
+                  <p className="font-bold leading-snug">{item.title}</p>
+                  <p className="mt-3 flex-1 text-sm text-text-muted">{item.description}</p>
                 </Link>
               </li>
             ))}

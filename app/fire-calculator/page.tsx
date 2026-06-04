@@ -22,8 +22,9 @@ export const metadata: Metadata = {
 
 export default function FireCalculatorPage() {
   return (
-    <div>
+    <div className="container-main page-shell">
       <PageHeader
+        badge="FIRE"
         title="FIRE-калькулятор"
         description="Рассчитайте цель капитала и срок выхода на финансовую независимость."
       />

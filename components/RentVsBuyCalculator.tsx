@@ -94,7 +94,7 @@ export default function RentVsBuyCalculator() {
   const wealthSubtitleTone = result.winner === "tie" ? "default" : result.winner === "buy" ? "success" : "warning";
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-block">
       <CalculatorSection title="Покупка жилья" description="Стоимость квартиры, взнос и условия ипотеки.">
         <NumberField
           label="Стоимость жилья ₽"
@@ -221,8 +221,8 @@ export default function RentVsBuyCalculator() {
         />
       </CalculatorSection>
 
-      <section className="space-y-3">
-        <h2 className="text-base font-semibold">Результаты</h2>
+      <section className="flex flex-col gap-6">
+        <h2 className="text-xl font-extrabold sm:text-2xl">Результаты</h2>
         <ResultCard
           variant="hero"
           label="Выгоднее"
@@ -291,7 +291,7 @@ export default function RentVsBuyCalculator() {
           <div className="table-fintech">
             <table className="w-full border-collapse text-sm">
               <thead>
-                <tr className="bg-stone-50 text-left">
+                <tr className="bg-accent/10 text-left">
                   <th className="border-b border-border px-3 py-2">Год</th>
                   <th className="border-b border-border px-3 py-2">Покупка</th>
                   <th className="border-b border-border px-3 py-2">Аренда</th>

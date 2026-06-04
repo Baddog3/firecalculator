@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import BlogPostList from "@/components/BlogPostList";
 import CalculatorCard from "@/components/CalculatorCard";
-import PageHeader from "@/components/PageHeader";
+import { getAllPosts } from "@/lib/blog";
 import { getSiteUrl } from "@/lib/site";
 
 const siteUrl = getSiteUrl();
@@ -22,42 +24,68 @@ export const metadata: Metadata = {
 
 const calculators = [
   {
-    title: "Калькулятор сложного процента",
-    description: "Рассчитайте рост капитала с учётом регулярных пополнений.",
-    href: "/compound-interest"
+    title: "Сложный процент",
+    description: "Рост капитала с регулярными пополнениями.",
+    href: "/compound-interest",
+    emoji: "📈",
+    tag: "Инвестиции"
   },
   {
     title: "FIRE-калькулятор",
-    description: "Определите цель капитала для финансовой независимости.",
-    href: "/fire-calculator"
+    description: "Цель капитала и срок финансовой независимости.",
+    href: "/fire-calculator",
+    emoji: "🔥",
+    tag: "FIRE"
   },
   {
     title: "Калькулятор ETF",
-    description: "Оценка доходности ETF с учётом комиссии TER.",
-    href: "/etf-calculator"
+    description: "Доходность ETF с учётом комиссии TER.",
+    href: "/etf-calculator",
+    emoji: "💹",
+    tag: "ETF"
   },
   {
     title: "Аренда vs ипотека",
-    description: "Сравнение сценариев владения и аренды жилья.",
-    href: "/rent-vs-buy"
+    description: "Сравнение покупки и аренды жилья.",
+    href: "/rent-vs-buy",
+    emoji: "🏠",
+    tag: "Недвижимость"
   }
 ];
 
 export default function HomePage() {
-  return (
-    <div>
-      <PageHeader
-        title="Финансовые калькуляторы"
-        description="Простые инструменты для инвесторов. Считайте доходность, FIRE-число и многое другое."
-      />
+  const posts = getAllPosts().slice(0, 6);
 
-      <section>
-        <h2 className="mb-3 text-base font-semibold">Калькуляторы</h2>
-        <ul className="grid gap-3">
+  return (
+    <div className="container-main home-shell">
+      <header className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">Финансовые калькуляторы</h1>
+          <p className="mt-1 text-sm text-text-muted">
+            Бесплатно · без регистрации · на русском языке
+          </p>
+        </div>
+        <Link href="/blog" className="text-sm font-bold hover:text-text-muted">
+          Все статьи →
+        </Link>
+      </header>
+
+      <section className="mb-10">
+        <ul className="grid-symmetric grid sm:grid-cols-2 lg:grid-cols-4">
           {calculators.map((calc) => (
-            <CalculatorCard key={calc.href} {...calc} />
+            <CalculatorCard key={calc.href} {...calc} compact />
           ))}
         </ul>
+      </section>
+
+      <section>
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-lg font-extrabold sm:text-xl">Статьи</h2>
+          <Link href="/blog" className="text-sm font-bold text-text-muted hover:text-text">
+            Смотреть все →
+          </Link>
+        </div>
+        <BlogPostList posts={posts} compact />
       </section>
     </div>
   );

@@ -8,25 +8,25 @@ type BlogArticleProps = {
 
 export default function BlogArticle({ content }: BlogArticleProps) {
   return (
-    <article className="blog-content">
+    <article className="blog-content mx-auto max-w-3xl">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
           h1: () => null,
           h2: ({ children }) => (
-            <h2 className="mb-3 mt-8 text-base font-semibold tracking-tight">{children}</h2>
+            <h2 className="mb-4 mt-12 text-2xl font-extrabold tracking-tight">{children}</h2>
           ),
-          h3: ({ children }) => <h3 className="mb-2 mt-6 text-sm font-semibold">{children}</h3>,
-          p: ({ children }) => <p className="mb-4 text-sm leading-relaxed">{children}</p>,
+          h3: ({ children }) => <h3 className="mb-3 mt-8 text-lg font-bold">{children}</h3>,
+          p: ({ children }) => <p className="mb-6 text-base leading-relaxed">{children}</p>,
           ul: ({ children }) => (
-            <ul className="mb-4 list-disc space-y-1.5 pl-5 text-sm leading-relaxed">{children}</ul>
+            <ul className="mb-6 list-disc space-y-2 pl-6 text-base leading-relaxed">{children}</ul>
           ),
           ol: ({ children }) => (
-            <ol className="mb-4 list-decimal space-y-1.5 pl-5 text-sm leading-relaxed">{children}</ol>
+            <ol className="mb-6 list-decimal space-y-2 pl-6 text-base leading-relaxed">{children}</ol>
           ),
           li: ({ children }) => <li>{children}</li>,
-          hr: () => <hr className="my-8 border-border" />,
-          strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+          hr: () => <hr className="my-12 border-t-2 border-border" />,
+          strong: ({ children }) => <strong className="font-bold">{children}</strong>,
           a: ({ href, children }) => {
             const isInternal = href?.startsWith("/");
             if (isInternal && href) {
@@ -44,28 +44,30 @@ export default function BlogArticle({ content }: BlogArticleProps) {
             );
           },
           blockquote: ({ children }) => (
-            <blockquote className="card-fintech mb-4 border-l-4 border-red-200 bg-red-50/50 p-4 text-sm text-text-muted">
+            <blockquote className="mb-6 rounded-2xl border-l-4 border-accent bg-accent/10 p-6 text-base text-text-muted">
               {children}
             </blockquote>
           ),
           code: ({ children }) => (
-            <code className="rounded-md border border-border bg-stone-50 px-1.5 py-0.5 font-mono text-sm">
+            <code className="rounded-lg border-2 border-border bg-accent/10 px-2 py-0.5 font-mono text-sm">
               {children}
             </code>
           ),
           pre: ({ children }) => (
-            <pre className="card-fintech mb-4 overflow-x-auto p-4 font-mono text-sm">{children}</pre>
+            <pre className="card-fintech mb-6 overflow-x-auto p-card font-mono text-sm">{children}</pre>
           ),
           table: ({ children }) => (
-            <div className="table-fintech mb-4">
+            <div className="table-fintech mb-6">
               <table className="w-full border-collapse text-sm">{children}</table>
             </div>
           ),
-          thead: ({ children }) => <thead className="bg-stone-50">{children}</thead>,
+          thead: ({ children }) => <thead className="bg-accent/10">{children}</thead>,
           th: ({ children }) => (
-            <th className="border-b border-border px-3 py-2 text-left text-xs font-semibold">{children}</th>
+            <th className="border-b-2 border-border px-4 py-3 text-left text-xs font-bold uppercase tracking-wide">
+              {children}
+            </th>
           ),
-          td: ({ children }) => <td className="border-b border-border px-3 py-2">{children}</td>
+          td: ({ children }) => <td className="border-b border-border px-4 py-3">{children}</td>
         }}
       >
         {content}

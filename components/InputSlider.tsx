@@ -28,12 +28,13 @@ export default function InputSlider({
 }: InputSliderProps) {
   const inputId = `${label.replace(/\s+/g, "-").toLowerCase()}-number`;
   const input = useNumberInput({ value, onChange, min, max });
+  const percent = ((value - min) / (max - min)) * 100;
 
   return (
-    <div className={`space-y-2 sm:col-span-2 ${className ?? ""}`}>
-      <div className="flex items-center justify-between gap-3">
+    <div className={`flex flex-col gap-4 sm:col-span-2 ${className ?? ""}`}>
+      <div className="flex items-center justify-between gap-4">
         <FieldLabel label={label} hint={hint} htmlFor={inputId} />
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <input
             id={inputId}
             type="text"
@@ -45,19 +46,26 @@ export default function InputSlider({
             onBlur={input.onBlur}
             className="input-fintech-sm"
           />
-          {suffix ? <span className="text-xs text-text-muted">{suffix}</span> : null}
+          {suffix ? <span className="text-xs font-semibold text-text-muted">{suffix}</span> : null}
         </div>
       </div>
-      <input
-        type="range"
-        value={value}
-        min={min}
-        max={max}
-        step={step}
-        onChange={(event) => onChange(Number(event.target.value))}
-        className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-stone-200 accent-red-600 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-red-600"
-        aria-label={label}
-      />
+      <div className="relative">
+        <input
+          type="range"
+          value={value}
+          min={min}
+          max={max}
+          step={step}
+          onChange={(event) => onChange(Number(event.target.value))}
+          className="relative z-10 h-2 w-full cursor-pointer appearance-none bg-transparent [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-20 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-text [&::-webkit-slider-thumb]:bg-accent [&::-webkit-slider-thumb]:shadow-brutal-sm"
+          aria-label={label}
+        />
+        <div className="pointer-events-none absolute inset-0 flex items-center">
+          <div className="h-2 w-full overflow-hidden rounded-full bg-border">
+            <div className="h-full rounded-full bg-accent transition-all" style={{ width: `${percent}%` }} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

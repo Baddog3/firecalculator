@@ -22,8 +22,9 @@ export const metadata: Metadata = {
 
 export default function CompoundInterestPage() {
   return (
-    <div>
+    <div className="container-main page-shell">
       <PageHeader
+        badge="Инвестиции"
         title="Калькулятор сложного процента"
         description="Рассчитайте рост капитала с учётом регулярных пополнений и реинвестирования процентов."
       />

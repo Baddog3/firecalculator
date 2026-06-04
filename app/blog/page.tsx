@@ -23,16 +23,14 @@ export default function BlogPage() {
   const posts = getAllPosts();
 
   return (
-    <div>
+    <div className="container-main page-shell">
       <PageHeader
-        title="Блог"
-        description="Статьи об инвестициях, FIRE, ETF и личных финансах для России и Европы."
+        badge="Блог"
+        title="Статьи для инвесторов"
+        description="Материалы об инвестициях, FIRE, ETF и личных финансах для России и Европы."
+        centered
       />
-
-      <section>
-        <h2 className="mb-3 text-base font-semibold">Все статьи</h2>
-        <BlogPostList posts={posts} />
-      </section>
+      <BlogPostList posts={posts} />
     </div>
   );
 }

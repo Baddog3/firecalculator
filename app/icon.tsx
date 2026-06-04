@@ -20,7 +20,7 @@ export default function Icon() {
       >
         <span
           style={{
-            color: "#ffffff",
+            color: brand.text,
             fontSize: 22,
             fontWeight: 700,
             fontFamily: "ui-monospace, monospace",

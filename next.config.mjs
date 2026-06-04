@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "export",
+  trailingSlash: true,
   webpack: (config, { dev }) => {
     if (dev) {
       config.watchOptions = {

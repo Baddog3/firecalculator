@@ -22,8 +22,9 @@ export const metadata: Metadata = {
 
 export default function RentVsBuyPage() {
   return (
-    <div>
+    <div className="container-main page-shell">
       <PageHeader
+        badge="Недвижимость"
         title="Аренда vs ипотека"
         description="Сравните покупку квартиры в ипотеку и аренду с инвестированием взноса."
       />
