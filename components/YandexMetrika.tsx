@@ -8,7 +8,6 @@ import { Suspense, useEffect, useRef } from "react";
 declare global {
   interface Window {
     ym?: (id: number, method: string, ...args: unknown[]) => void;
-    dataLayer?: unknown[];
   }
 }
 
@@ -47,11 +46,9 @@ export default function YandexMetrika() {
             k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
           })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=${YANDEX_METRIKA_ID}', 'ym');
 
-          window.dataLayer = window.dataLayer || [];
           ym(${YANDEX_METRIKA_ID}, 'init', {
             ssr: true,
             clickmap: true,
-            ecommerce: "dataLayer",
             referrer: document.referrer,
             url: location.href,
             accurateTrackBounce: true,
