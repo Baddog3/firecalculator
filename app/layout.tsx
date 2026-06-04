@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Manrope } from "next/font/google";
+import { Inter, JetBrains_Mono, Literata } from "next/font/google";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { brand } from "@/lib/brand";
@@ -8,10 +8,16 @@ import "@/styles/globals.css";
 
 const siteUrl = getSiteUrl();
 
-const manrope = Manrope({
+const inter = Inter({
   subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-manrope"
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter"
+});
+
+const literata = Literata({
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-literata"
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -46,7 +52,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru">
-      <body className={`${manrope.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
+      <body
+        className={`${inter.variable} ${literata.variable} ${jetbrainsMono.variable} min-h-screen bg-bg font-sans text-text antialiased`}
+      >
         <Header />
         <main>{children}</main>
         <Footer />

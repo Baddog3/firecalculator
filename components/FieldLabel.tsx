@@ -8,7 +8,7 @@ type FieldLabelProps = {
 
 export default function FieldLabel({ label, hint, htmlFor }: FieldLabelProps) {
   return (
-    <label htmlFor={htmlFor} className="inline-flex items-center text-xs font-bold uppercase tracking-wide">
+    <label htmlFor={htmlFor} className="inline-flex items-center text-sm font-medium text-text">
       {label}
       {hint ? <FieldHint hint={hint} /> : null}
     </label>

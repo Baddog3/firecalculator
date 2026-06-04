@@ -10,6 +10,7 @@ import {
   YAxis
 } from "recharts";
 import { brand } from "@/lib/brand";
+import { chartTooltipStyle } from "@/lib/chart-styles";
 
 type RentVsBuyChartPoint = {
   year: number;
@@ -32,7 +33,7 @@ const { primary, secondary, grid, muted } = brand.chart;
 
 export default function RentVsBuyChart({ data }: RentVsBuyChartProps) {
   return (
-    <div className="card-fintech h-72 w-full overflow-hidden p-card sm:h-80">
+    <div className="card h-72 w-full overflow-hidden p-card sm:h-80">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
           <CartesianGrid stroke={grid} strokeDasharray="2 2" vertical={false} />
@@ -47,19 +48,13 @@ export default function RentVsBuyChart({ data }: RentVsBuyChartProps) {
           <Tooltip
             formatter={(value: number) => rubFormat(value)}
             labelFormatter={(year) => `Год ${year}`}
-            contentStyle={{
-              borderRadius: "12px",
-              border: "2px solid #000000",
-              boxShadow: "3px 3px 0 0 #d4ff00",
-              fontSize: "13px",
-              fontWeight: 600
-            }}
+            contentStyle={chartTooltipStyle}
           />
           <Line
             type="monotone"
             dataKey="buyerNetWorth"
             stroke={primary}
-            strokeWidth={2.5}
+            strokeWidth={2}
             dot={false}
             name="Покупка"
           />

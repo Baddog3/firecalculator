@@ -3,35 +3,43 @@
 @tailwind utilities;
 
 :root {
-  --bg: #ffffff;
-  --bg-secondary: #f5f5f5;
-  --bg-dark: #0a0a0a;
-  --border: #ebebeb;
-  --text: #000000;
-  --text-muted: #888888;
-  --accent: #d4ff00;
-  --accent-hover: #c4ef00;
-  --accent-light: #f4ffe0;
-  --accent-border: #e0ff66;
-  --success: #16a34a;
-  --warning: #ea580c;
+  --bg: #fafaf9;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --border: #e7e5e4;
+  --border-strong: #d6d3d1;
+  --text: #1c1917;
+  --text-muted: #78716c;
+  --text-subtle: #a8a29e;
+  --primary: #1c1917;
+  --primary-hover: #292524;
+  --primary-fg: #fafaf9;
+  --ring: rgba(28, 25, 23, 0.12);
+  --success: #15803d;
+  --warning: #c2410c;
+  --chart-1: #1c1917;
+  --chart-2: #a8a29e;
+  --chart-grid: #f5f5f4;
 
-  --container-max: 1280px;
-  --container-px: 40px;
-  --space-section: 64px;
-  --space-block: 32px;
-  --space-card: 32px;
+  --container-max: 1120px;
+  --container-px: 24px;
+  --space-section: 80px;
+  --space-block: 40px;
+  --space-card: 24px;
   --space-card-compact: 16px;
   --grid-gap: 16px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
 }
 
 @media (max-width: 768px) {
   :root {
-    --container-px: 20px;
-    --space-section: 64px;
+    --container-px: 16px;
+    --space-section: 56px;
     --space-block: 32px;
-    --space-card: 24px;
-    --grid-gap: 16px;
+    --space-card: 20px;
+    --grid-gap: 12px;
   }
 }
 
@@ -41,6 +49,20 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 html,
@@ -59,7 +81,7 @@ a {
 }
 
 ::selection {
-  background: var(--accent);
+  background: var(--border-strong);
   color: var(--text);
 }
 
@@ -87,82 +109,106 @@ a {
     gap: var(--grid-gap);
   }
 
-  .input-fintech {
-    @apply w-full rounded-xl border-2 border-border bg-white px-4 py-3 font-mono text-sm transition-all;
-    @apply focus:border-text focus:outline-none;
-    box-shadow: none;
+  .type-display {
+    @apply font-display text-4xl font-semibold leading-tight tracking-tight text-balance sm:text-5xl;
   }
 
-  .input-fintech:focus {
-    box-shadow: 0 0 0 4px rgba(212, 255, 0, 0.45);
+  .type-h1 {
+    @apply font-display text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl;
   }
 
-  .input-fintech-sm {
-    @apply w-28 rounded-xl border-2 border-border bg-white px-3 py-2 text-right font-mono text-sm transition-all;
-    @apply focus:border-text focus:outline-none;
-    box-shadow: none;
+  .type-h2 {
+    @apply text-xl font-semibold tracking-tight;
   }
 
-  .input-fintech-sm:focus {
-    box-shadow: 0 0 0 4px rgba(212, 255, 0, 0.45);
+  .type-caption {
+    @apply text-xs text-text-muted;
   }
 
-  .card-fintech {
-    @apply rounded-2xl border-2 border-border bg-white;
+  .type-metric {
+    @apply font-mono text-2xl font-semibold tabular-nums tracking-tight sm:text-3xl;
   }
 
-  .card-fintech-hover {
-    @apply rounded-2xl border-2 border-border bg-white transition-all duration-200;
+  .input {
+    @apply w-full rounded-[var(--radius-md)] border border-border bg-surface px-4 py-3 font-mono text-sm text-text transition-colors;
+    @apply placeholder:text-text-subtle focus:border-border-strong focus:outline-none;
   }
 
-  .card-fintech-hover:hover {
-    transform: translateY(-1px);
-    border-color: var(--text);
-    box-shadow: 3px 3px 0 0 #000000;
+  .input:focus-visible {
+    box-shadow: 0 0 0 3px var(--ring);
   }
 
-  .card-calculator-compact {
-    @apply rounded-xl border-2 border-border bg-white transition-all duration-200;
+  .input-sm {
+    @apply w-28 rounded-[var(--radius-md)] border border-border bg-surface px-3 py-2 text-right font-mono text-sm text-text transition-colors;
+    @apply focus:border-border-strong focus:outline-none;
   }
 
-  .card-calculator-compact:hover {
-    transform: translateY(-1px);
-    border-color: var(--text);
-    box-shadow: 2px 2px 0 0 #000000;
+  .input-sm:focus-visible {
+    box-shadow: 0 0 0 3px var(--ring);
+  }
+
+  .card {
+    @apply rounded-[var(--radius-lg)] border border-border bg-surface;
+  }
+
+  .card-interactive {
+    @apply rounded-[var(--radius-lg)] border border-border bg-surface transition-colors duration-200;
+  }
+
+  .card-interactive:hover {
+    border-color: var(--border-strong);
+    background: var(--surface);
+  }
+
+  .card-calculator {
+    @apply rounded-[var(--radius-md)] border border-border bg-surface transition-colors duration-200;
+  }
+
+  .card-calculator:hover {
+    border-color: var(--border-strong);
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-full bg-accent px-6 py-3 text-sm font-bold text-text transition-all;
-    @apply hover:bg-accent-hover hover:shadow-[3px_3px_0_0_#000000] active:translate-y-0.5 active:shadow-none;
+    @apply inline-flex items-center justify-center rounded-[var(--radius-md)] bg-primary px-5 py-2.5 text-sm font-semibold text-primary-fg transition-colors;
+    @apply hover:bg-primary-hover focus-visible:outline-none;
+  }
+
+  .btn-primary:focus-visible {
+    box-shadow: 0 0 0 3px var(--ring);
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-full border-2 border-text bg-transparent px-6 py-3 text-sm font-bold text-text transition-all;
-    @apply hover:bg-text hover:text-white hover:shadow-[3px_3px_0_0_#d4ff00];
+    @apply inline-flex items-center justify-center rounded-[var(--radius-md)] border border-border bg-surface px-5 py-2.5 text-sm font-semibold text-text transition-colors;
+    @apply hover:border-border-strong hover:bg-bg focus-visible:outline-none;
   }
 
-  .btn-fintech {
-    @apply rounded-xl border-2 border-border bg-white px-4 py-2.5 text-sm font-semibold transition-all hover:border-text hover:shadow-[2px_2px_0_0_#000000];
+  .btn-secondary:focus-visible {
+    box-shadow: 0 0 0 3px var(--ring);
   }
 
-  .table-fintech {
-    @apply overflow-x-auto rounded-2xl border-2 border-border;
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-[var(--radius-md)] px-4 py-2 text-sm font-medium text-text-muted transition-colors;
+    @apply hover:bg-bg hover:text-text focus-visible:outline-none;
   }
 
-  .link-fintech {
-    @apply font-semibold text-text underline decoration-accent decoration-2 underline-offset-4 transition-colors hover:decoration-accent-hover;
+  .btn-ghost:focus-visible {
+    box-shadow: 0 0 0 3px var(--ring);
   }
 
-  .badge {
-    @apply inline-flex items-center rounded-full bg-accent px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-text;
+  .table-wrap {
+    @apply overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-surface;
+  }
+
+  .link {
+    @apply font-medium text-text underline decoration-border-strong decoration-1 underline-offset-4 transition-colors hover:decoration-text;
+  }
+
+  .badge-muted {
+    @apply inline-flex items-center rounded-[var(--radius-sm)] border border-border px-2.5 py-1 text-xs font-medium uppercase tracking-wider text-text-muted;
   }
 
   .section-title {
-    @apply text-3xl font-extrabold tracking-tight sm:text-4xl;
-  }
-
-  .hero-gradient {
-    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(212, 255, 0, 0.12), transparent);
+    @apply type-h2;
   }
 
   .home-shell {
@@ -173,5 +219,42 @@ a {
   .page-shell {
     padding-top: var(--space-block);
     padding-bottom: var(--space-section);
+  }
+
+  .nav-link {
+    @apply text-sm font-medium text-text-muted transition-colors hover:text-text;
+  }
+
+  .nav-link-active {
+    @apply text-sm font-semibold text-text underline decoration-text decoration-2 underline-offset-8;
+  }
+
+  .prose-blog h2 {
+    @apply font-display mt-10 text-2xl font-semibold tracking-tight;
+  }
+
+  .prose-blog h3 {
+    @apply mt-8 text-lg font-semibold;
+  }
+
+  .prose-blog p {
+    @apply mt-4 leading-relaxed text-text;
+  }
+
+  .prose-blog ul,
+  .prose-blog ol {
+    @apply mt-4 list-inside list-disc space-y-2 pl-2;
+  }
+
+  .prose-blog a {
+    @apply link;
+  }
+
+  .prose-blog code {
+    @apply rounded-[var(--radius-sm)] bg-bg px-1.5 py-0.5 font-mono text-sm;
+  }
+
+  .calculator-layout {
+    @apply grid gap-8 lg:grid-cols-[1fr_360px] lg:items-start;
   }
 }

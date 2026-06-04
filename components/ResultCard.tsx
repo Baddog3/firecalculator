@@ -29,15 +29,13 @@ export default function ResultCard({
 }: ResultCardProps) {
   if (variant === "hero") {
     return (
-      <div className="rounded-2xl border-2 border-text bg-bg-dark p-card shadow-brutal-accent">
-        <p className="text-sm font-bold text-accent">
+      <div className={`card border-border-strong p-card ${className ?? ""}`}>
+        <p className="text-sm font-medium text-text-muted">
           <FieldLabel label={label} hint={hint} />
         </p>
-        <p className="mt-3 font-mono text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
-          {value}
-        </p>
+        <p className="type-metric mt-3 lg:text-4xl">{value}</p>
         {subtitle ? (
-          <p className={`mt-4 text-sm ${subtitleToneClasses[subtitleTone]}`}>{subtitle}</p>
+          <p className={`mt-3 text-sm leading-relaxed ${subtitleToneClasses[subtitleTone]}`}>{subtitle}</p>
         ) : null}
       </div>
     );
@@ -45,11 +43,11 @@ export default function ResultCard({
 
   if (variant === "compact") {
     return (
-      <div className={`rounded-xl border-2 border-border bg-white p-4 ${className ?? ""}`}>
-        <p className="text-xs font-semibold text-text-muted">
+      <div className={`card p-4 ${className ?? ""}`}>
+        <p className="text-xs font-medium text-text-muted">
           <FieldLabel label={label} hint={hint} />
         </p>
-        <p className="mt-1 font-mono text-lg font-bold">{value}</p>
+        <p className="mt-1 font-mono text-lg font-semibold tabular-nums">{value}</p>
         {subtitle ? (
           <p className={`mt-1 text-xs ${subtitleToneClasses[subtitleTone]}`}>{subtitle}</p>
         ) : null}
@@ -58,11 +56,13 @@ export default function ResultCard({
   }
 
   return (
-    <div className={`rounded-xl border-2 border-border bg-white p-5 ${className ?? ""}`}>
-      <p className="text-sm font-semibold text-text-muted">
+    <div className={`card p-5 ${className ?? ""}`}>
+      <p className="text-sm font-medium text-text-muted">
         <FieldLabel label={label} hint={hint} />
       </p>
-      <p className={`font-mono font-bold ${highlight ? "text-3xl sm:text-4xl" : "text-2xl"}`}>{value}</p>
+      <p className={`font-mono font-semibold tabular-nums ${highlight ? "text-3xl sm:text-4xl" : "text-2xl"}`}>
+        {value}
+      </p>
       {subtitle ? (
         <p className={`mt-2 text-sm ${subtitleToneClasses[subtitleTone]}`}>{subtitle}</p>
       ) : null}

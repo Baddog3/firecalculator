@@ -35,10 +35,11 @@ export default async function OpenGraphImage() {
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <span
             style={{
-              color: brand.accent,
-              fontSize: 36,
-              fontWeight: 700,
-              fontFamily: "JetBrains Mono"
+              color: brand.textMuted,
+              fontSize: 28,
+              fontWeight: 600,
+              fontFamily: "JetBrains Mono",
+              letterSpacing: 1
             }}
           >
             {brand.name}
@@ -72,9 +73,9 @@ export default async function OpenGraphImage() {
           <div
             style={{
               width: 120,
-              height: 8,
-              background: brand.accent,
-              borderRadius: 999
+              height: 4,
+              background: brand.primary,
+              borderRadius: 2
             }}
           />
           <span style={{ color: brand.textMuted, fontSize: 24, fontFamily: "Inter" }}>

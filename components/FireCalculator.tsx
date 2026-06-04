@@ -83,133 +83,137 @@ export default function FireCalculator() {
 
   return (
     <div className="flex flex-col gap-block">
-      <CalculatorSection
-        title="Ваш профиль"
-        description="Возраст, накопления и текущий уровень расходов."
-      >
-        <NumberField
-          label="Текущий возраст"
-          hint="Сколько вам лет сейчас. От этого считается, сколько лет осталось до желаемого выхода."
-          value={currentAge}
-          min={18}
-          max={80}
-          step={1}
-          onChange={setCurrentAge}
-        />
-        <NumberField
-          label="Желаемый возраст выхода"
-          hint="Возраст, к которому хотите накопить FIRE-капитал и перестать зависеть от зарплаты."
-          value={retirementAge}
-          min={currentAge + 1}
-          max={90}
-          step={1}
-          onChange={setRetirementAge}
-        />
-        <NumberField
-          label="Текущие накопления ₽"
-          hint="Все инвестиции и сбережения, которые уже можно использовать для FIRE: брокерский счёт, ИИС, вклады."
-          value={currentSavings}
-          min={0}
-          step={10000}
-          formatThousands
-          onChange={setCurrentSavings}
-        />
-        <NumberField
-          label="Ежемесячные расходы ₽"
-          hint="Сколько вам нужно на жизнь в месяц сейчас: жильё, еда, транспорт, страховки. Не включайте суммы, которые вы откладываете."
-          value={monthlyExpenses}
-          min={0}
-          step={1000}
-          formatThousands
-          onChange={setMonthlyExpenses}
-        />
-        <NumberField
-          label="Откладываете сейчас ₽/мес"
-          hint="Сколько вы реально инвестируете каждый месяц уже сегодня. Используется для расчёта «лет до FIRE»."
-          value={monthlySavingsCurrent}
-          min={0}
-          step={1000}
-          formatThousands
-          onChange={setMonthlySavingsCurrent}
-          className="sm:col-span-2"
-        />
-      </CalculatorSection>
+      <div className="calculator-layout">
+        <div className="flex flex-col gap-block">
+          <CalculatorSection
+            title="Ваш профиль"
+            description="Возраст, накопления и текущий уровень расходов."
+          >
+            <NumberField
+              label="Текущий возраст"
+              hint="Сколько вам лет сейчас. От этого считается, сколько лет осталось до желаемого выхода."
+              value={currentAge}
+              min={18}
+              max={80}
+              step={1}
+              onChange={setCurrentAge}
+            />
+            <NumberField
+              label="Желаемый возраст выхода"
+              hint="Возраст, к которому хотите накопить FIRE-капитал и перестать зависеть от зарплаты."
+              value={retirementAge}
+              min={currentAge + 1}
+              max={90}
+              step={1}
+              onChange={setRetirementAge}
+            />
+            <NumberField
+              label="Текущие накопления ₽"
+              hint="Все инвестиции и сбережения, которые уже можно использовать для FIRE: брокерский счёт, ИИС, вклады."
+              value={currentSavings}
+              min={0}
+              step={10000}
+              formatThousands
+              onChange={setCurrentSavings}
+            />
+            <NumberField
+              label="Ежемесячные расходы ₽"
+              hint="Сколько вам нужно на жизнь в месяц сейчас: жильё, еда, транспорт, страховки. Не включайте суммы, которые вы откладываете."
+              value={monthlyExpenses}
+              min={0}
+              step={1000}
+              formatThousands
+              onChange={setMonthlyExpenses}
+            />
+            <NumberField
+              label="Откладываете сейчас ₽/мес"
+              hint="Сколько вы реально инвестируете каждый месяц уже сегодня. Используется для расчёта «лет до FIRE»."
+              value={monthlySavingsCurrent}
+              min={0}
+              step={1000}
+              formatThousands
+              onChange={setMonthlySavingsCurrent}
+              className="sm:col-span-2"
+            />
+          </CalculatorSection>
 
-      <CalculatorSection
-        title="Предположения"
-        description="Ожидания по доходности, инфляции и правилу изъятия."
-      >
-        <InputSlider
-          label="Ожидаемая доходность"
-          hint="Средняя годовая доходность инвестиций до налогов. Для глобального ETF часто используют 7–10%."
-          value={annualReturnPercent}
-          min={0}
-          max={20}
-          step={0.1}
-          suffix="%"
-          onChange={setAnnualReturnPercent}
-        />
-        <InputSlider
-          label="Ставка изъятия"
-          hint="Какую долю капитала планируете тратить каждый год после FIRE. Правило 4% означает 4% в год от портфеля."
-          value={withdrawalRatePercent}
-          min={2}
-          max={8}
-          step={0.1}
-          suffix="%"
-          onChange={setWithdrawalRatePercent}
-        />
-        <InputSlider
-          label="Инфляция"
-          hint="Ожидаемый рост цен в год. Нужна, чтобы скорректировать расходы к моменту выхода на FIRE."
-          value={inflationPercent}
-          min={0}
-          max={15}
-          step={0.1}
-          suffix="%"
-          onChange={setInflationPercent}
-        />
-      </CalculatorSection>
-
-      <section className="flex flex-col gap-6">
-        <h2 className="text-xl font-extrabold sm:text-2xl">Результаты</h2>
-        <ResultCard
-          variant="hero"
-          label="FIRE-число"
-          hint="Размер капитала, которого нужно достичь, чтобы покрывать расходы выбранной ставкой изъятия."
-          value={moneyFormat(result.fireNumber)}
-          subtitle={`${yearsFormat(result.yearsToFire)} · ${moneyFormat(result.monthlySavingsNeeded)}/мес · выход в ${retirementAge} лет`}
-        />
-        <div className="grid-symmetric grid grid-cols-2 sm:grid-cols-3">
-          <ResultCard
-            variant="compact"
-            label="Нужно откладывать"
-            hint="Сумма ежемесячных взносов, чтобы успеть к желаемому возрасту при текущих накоплениях."
-            value={moneyFormat(result.monthlySavingsNeeded)}
-            subtitle={savingsSubtitle}
-            subtitleTone={savingsSubtitleTone}
-          />
-          <ResultCard
-            variant="compact"
-            label="Лет до FIRE"
-            hint="Через сколько лет достигнете FIRE-цели при текущем темпе отложений и доходности."
-            value={yearsFormat(result.yearsToFire)}
-            subtitle={`При ${moneyFormat(monthlySavingsCurrent)}/мес`}
-          />
-          <ResultCard
-            variant="compact"
-            label="Портфель к выходу"
-            hint="Сколько будет на счёте к желаемому возрасту, если откладывать рекомендованную сумму каждый месяц."
-            value={moneyFormat(result.portfolioAtRetirement)}
-            subtitle={`Возраст ${retirementAge} лет`}
-            className="col-span-2 sm:col-span-1"
-          />
+          <CalculatorSection
+            title="Предположения"
+            description="Ожидания по доходности, инфляции и правилу изъятия."
+          >
+            <InputSlider
+              label="Ожидаемая доходность"
+              hint="Средняя годовая доходность инвестиций до налогов. Для глобального ETF часто используют 7–10%."
+              value={annualReturnPercent}
+              min={0}
+              max={20}
+              step={0.1}
+              suffix="%"
+              onChange={setAnnualReturnPercent}
+            />
+            <InputSlider
+              label="Ставка изъятия"
+              hint="Какую долю капитала планируете тратить каждый год после FIRE. Правило 4% означает 4% в год от портфеля."
+              value={withdrawalRatePercent}
+              min={2}
+              max={8}
+              step={0.1}
+              suffix="%"
+              onChange={setWithdrawalRatePercent}
+            />
+            <InputSlider
+              label="Инфляция"
+              hint="Ожидаемый рост цен в год. Нужна, чтобы скорректировать расходы к моменту выхода на FIRE."
+              value={inflationPercent}
+              min={0}
+              max={15}
+              step={0.1}
+              suffix="%"
+              onChange={setInflationPercent}
+            />
+          </CalculatorSection>
         </div>
-      </section>
+
+        <aside className="flex flex-col gap-4 lg:sticky lg:top-24">
+          <h2 className="type-h2">Результаты</h2>
+          <ResultCard
+            variant="hero"
+            label="FIRE-число"
+            hint="Размер капитала, которого нужно достичь, чтобы покрывать расходы выбранной ставкой изъятия."
+            value={moneyFormat(result.fireNumber)}
+            subtitle={`${yearsFormat(result.yearsToFire)} · ${moneyFormat(result.monthlySavingsNeeded)}/мес · выход в ${retirementAge} лет`}
+          />
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
+            <ResultCard
+              variant="compact"
+              label="Нужно откладывать"
+              hint="Сумма ежемесячных взносов, чтобы успеть к желаемому возрасту при текущих накоплениях."
+              value={moneyFormat(result.monthlySavingsNeeded)}
+              subtitle={savingsSubtitle}
+              subtitleTone={savingsSubtitleTone}
+            />
+            <ResultCard
+              variant="compact"
+              label="Лет до FIRE"
+              hint="Через сколько лет достигнете FIRE-цели при текущем темпе отложений и доходности."
+              value={yearsFormat(result.yearsToFire)}
+              subtitle={`При ${moneyFormat(monthlySavingsCurrent)}/мес`}
+            />
+            <ResultCard
+              variant="compact"
+              label="Портфель к выходу"
+              hint="Сколько будет на счёте к желаемому возрасту, если откладывать рекомендованную сумму каждый месяц."
+              value={moneyFormat(result.portfolioAtRetirement)}
+              subtitle={`Возраст ${retirementAge} лет`}
+              className="sm:col-span-2 lg:col-span-1"
+            />
+          </div>
+        </aside>
+      </div>
 
       <section className="flex flex-col gap-4">
         <div>
-          <h2 className="text-xl font-extrabold sm:text-2xl">Рост портфеля к FIRE-цели</h2>
+          <h2 className="type-h2">Рост портфеля к FIRE-цели</h2>
           <p className="mt-2 text-sm text-text-muted">
             Пунктирная линия — целевой капитал. Точка — момент достижения FIRE при рекомендованных ежемесячных
             взносах.
@@ -222,16 +226,16 @@ export default function FireCalculator() {
         />
       </section>
 
-      <section className="flex flex-col gap-6">
-        <h2 className="text-xl font-extrabold sm:text-2xl">Что такое FIRE</h2>
-        <p className="text-base leading-relaxed">
+      <section className="prose-blog max-w-prose flex flex-col gap-4">
+        <h2 className="type-h2 !mt-0">Что такое FIRE</h2>
+        <p>
           FIRE (Financial Independence, Retire Early) — подход, при котором вы накапливаете инвестиционный капитал,
           достаточный для покрытия расходов без активного заработка. Цель — не «перестать работать завтра», а получить
           финансовую свободу выбора.
         </p>
 
-        <h3 className="text-sm font-semibold">Правило 4%: откуда оно взялось</h3>
-        <p className="text-sm leading-relaxed">
+        <h3 className="!mt-6 text-sm font-semibold">Правило 4%: откуда оно взялось</h3>
+        <p className="text-sm">
           Правило появилось из исследования Trinity Study: при изъятии около 4% капитала в год портфель часто
           сохранялся на длинном горизонте. На практике это означает, что для годовых расходов в{" "}
           <span className="font-mono">{moneyFormat(result.annualExpensesAtRetirement)}</span> нужен капитал порядка{" "}
@@ -239,16 +243,16 @@ export default function FireCalculator() {
           %.
         </p>
 
-        <h3 className="text-sm font-semibold">Применимость в России и Европе</h3>
-        <p className="text-sm leading-relaxed">
+        <h3 className="!mt-6 text-sm font-semibold">Применимость в России и Европе</h3>
+        <p className="text-sm">
           В России и Европе логика та же, но важны локальные факторы: инфляция, валюта расходов, налоги и доступные
           инструменты (брокерские счета, ETF, пенсионные программы). Калькулятор учитывает инфляцию расходов к моменту
           выхода на FIRE, поэтому цель ближе к реальности, чем расчёт «в сегодняшних рублях».
         </p>
 
-        <p className="text-sm leading-relaxed">
+        <p className="text-sm">
           Чтобы оценить, как капитал растёт с регулярными пополнениями, используйте{" "}
-          <Link href="/compound-interest" className="link-fintech">
+          <Link href="/compound-interest" className="link">
             калькулятор сложного процента
           </Link>
           .

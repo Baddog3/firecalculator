@@ -23,28 +23,31 @@ const footerSections = [
 
 export default function Footer() {
   return (
-    <footer className="border-t-2 border-border bg-bg-dark text-white">
-      <div className="container-main section-y">
-        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="flex flex-col gap-4">
+    <footer className="mt-auto border-t border-border bg-surface">
+      <div className="container-main py-12 md:py-16">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="flex flex-col gap-3">
             <Link href="/" className="inline-flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent font-mono text-sm font-bold text-text">
+              <span className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-bg font-display text-sm font-semibold">
                 fc
               </span>
-              <span className="text-lg font-extrabold">{brand.name}</span>
+              <span className="font-display text-lg font-semibold">{brand.name}</span>
             </Link>
-            <p className="max-w-xs text-sm leading-relaxed text-white/60">
+            <p className="max-w-xs text-sm leading-relaxed text-text-muted">
               Бесплатные финансовые калькуляторы для инвесторов. Считайте доходность, FIRE-число и многое другое.
             </p>
           </div>
 
           {footerSections.map((section) => (
-            <div key={section.title} className="flex flex-col gap-4">
-              <p className="text-xs font-bold uppercase tracking-widest text-accent">{section.title}</p>
-              <ul className="flex flex-col gap-3">
+            <div key={section.title} className="flex flex-col gap-3">
+              <p className="type-caption font-semibold uppercase tracking-wider">{section.title}</p>
+              <ul className="flex flex-col gap-2">
                 {section.links.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-sm text-white/70 transition-colors hover:text-accent">
+                    <Link
+                      href={link.href}
+                      className="text-sm text-text-muted transition-colors hover:text-text"
+                    >
                       {link.label}
                     </Link>
                   </li>
@@ -54,11 +57,11 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-white/50">
+        <div className="mt-10 flex flex-col gap-3 border-t border-border pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-text-muted">
             Сайт носит информационный характер и не является финансовой рекомендацией.
           </p>
-          <p className="font-mono text-xs text-white/40">
+          <p className="font-mono text-xs text-text-subtle">
             © {new Date().getFullYear()} {brand.name}
           </p>
         </div>

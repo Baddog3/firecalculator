@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import BlogPostList from "@/components/BlogPostList";
 import CalculatorCard from "@/components/CalculatorCard";
+import { calculatorIcons } from "@/lib/calculator-icons";
 import { getAllPosts } from "@/lib/blog";
 import { getSiteUrl } from "@/lib/site";
 
@@ -24,31 +25,31 @@ export const metadata: Metadata = {
 
 const calculators = [
   {
+    key: "compound-interest" as const,
     title: "Сложный процент",
     description: "Рост капитала с регулярными пополнениями.",
     href: "/compound-interest",
-    emoji: "📈",
     tag: "Инвестиции"
   },
   {
+    key: "fire-calculator" as const,
     title: "FIRE-калькулятор",
     description: "Цель капитала и срок финансовой независимости.",
     href: "/fire-calculator",
-    emoji: "🔥",
     tag: "FIRE"
   },
   {
+    key: "etf-calculator" as const,
     title: "Калькулятор ETF",
     description: "Доходность ETF с учётом комиссии TER.",
     href: "/etf-calculator",
-    emoji: "💹",
     tag: "ETF"
   },
   {
+    key: "rent-vs-buy" as const,
     title: "Аренда vs ипотека",
     description: "Сравнение покупки и аренды жилья.",
     href: "/rent-vs-buy",
-    emoji: "🏠",
     tag: "Недвижимость"
   }
 ];
@@ -58,30 +59,33 @@ export default function HomePage() {
 
   return (
     <div className="container-main home-shell">
-      <header className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">Финансовые калькуляторы</h1>
-          <p className="mt-1 text-sm text-text-muted">
-            Бесплатно · без регистрации · на русском языке
-          </p>
-        </div>
-        <Link href="/blog" className="text-sm font-bold hover:text-text-muted">
-          Все статьи →
-        </Link>
+      <header className="mb-12 max-w-2xl">
+        <h1 className="type-display">Финансовые калькуляторы</h1>
+        <p className="mt-4 text-base text-text-muted sm:text-lg">
+          Бесплатно · без регистрации · на русском языке
+        </p>
       </header>
 
-      <section className="mb-10">
+      <section className="mb-14">
         <ul className="grid-symmetric grid sm:grid-cols-2 lg:grid-cols-4">
           {calculators.map((calc) => (
-            <CalculatorCard key={calc.href} {...calc} compact />
+            <CalculatorCard
+              key={calc.href}
+              title={calc.title}
+              description={calc.description}
+              href={calc.href}
+              icon={calculatorIcons[calc.key]}
+              tag={calc.tag}
+              compact
+            />
           ))}
         </ul>
       </section>
 
       <section>
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg font-extrabold sm:text-xl">Статьи</h2>
-          <Link href="/blog" className="text-sm font-bold text-text-muted hover:text-text">
+        <div className="mb-6 flex items-center justify-between gap-4">
+          <h2 className="type-h2">Статьи</h2>
+          <Link href="/blog" className="nav-link shrink-0">
             Смотреть все →
           </Link>
         </div>

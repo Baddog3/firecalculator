@@ -48,7 +48,7 @@ export default function NumberField({
           onChange={(event) => input.onChange(event.target.value)}
           onFocus={input.onFocus}
           onBlur={input.onBlur}
-          className="input-fintech"
+          className="input"
         />
         {suffix ? <span className="shrink-0 text-xs text-text-muted">{suffix}</span> : null}
       </div>

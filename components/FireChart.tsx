@@ -12,6 +12,7 @@ import {
   YAxis
 } from "recharts";
 import { brand } from "@/lib/brand";
+import { chartTooltipStyle } from "@/lib/chart-styles";
 
 type FireChartPoint = {
   age: number;
@@ -31,7 +32,7 @@ const rubFormat = (value: number) =>
     maximumFractionDigits: 0
   }).format(value);
 
-const { primary, accent, grid, muted } = brand.chart;
+const { primary, secondary, grid, muted } = brand.chart;
 
 export default function FireChart({ data, fireTarget, intersectionAge }: FireChartProps) {
   const intersectionPoint = intersectionAge
@@ -39,13 +40,13 @@ export default function FireChart({ data, fireTarget, intersectionAge }: FireCha
     : null;
 
   return (
-    <div className="card-fintech h-72 w-full overflow-hidden p-card sm:h-80">
+    <div className="card h-72 w-full overflow-hidden p-card sm:h-80">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data}>
           <defs>
             <linearGradient id="fireGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={accent} stopOpacity={0.4} />
-              <stop offset="100%" stopColor={accent} stopOpacity={0.05} />
+              <stop offset="0%" stopColor={primary} stopOpacity={0.12} />
+              <stop offset="100%" stopColor={primary} stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid stroke={grid} strokeDasharray="2 2" vertical={false} />
@@ -60,17 +61,11 @@ export default function FireChart({ data, fireTarget, intersectionAge }: FireCha
           <Tooltip
             formatter={(value: number) => rubFormat(value)}
             labelFormatter={(age) => `Возраст: ${age}`}
-            contentStyle={{
-              borderRadius: "12px",
-              border: "2px solid #000000",
-              boxShadow: "3px 3px 0 0 #d4ff00",
-              fontSize: "13px",
-              fontWeight: 600
-            }}
+            contentStyle={chartTooltipStyle}
           />
           <ReferenceLine
             y={fireTarget}
-            stroke={muted}
+            stroke={secondary}
             strokeDasharray="6 4"
             label={{
               value: "FIRE-цель",
@@ -83,7 +78,7 @@ export default function FireChart({ data, fireTarget, intersectionAge }: FireCha
             type="monotone"
             dataKey="portfolio"
             stroke={primary}
-            strokeWidth={2.5}
+            strokeWidth={2}
             fill="url(#fireGradient)"
             name="Портфель"
           />
@@ -91,8 +86,8 @@ export default function FireChart({ data, fireTarget, intersectionAge }: FireCha
             <ReferenceDot
               x={intersectionPoint.age}
               y={intersectionPoint.portfolio}
-              r={7}
-              fill={accent}
+              r={5}
+              fill={primary}
               stroke={primary}
               strokeWidth={2}
             />

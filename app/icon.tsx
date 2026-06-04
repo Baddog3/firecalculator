@@ -14,17 +14,16 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: brand.accent,
-          borderRadius: 8
+          background: brand.primary,
+          borderRadius: 6
         }}
       >
         <span
           style={{
-            color: brand.text,
-            fontSize: 22,
-            fontWeight: 700,
-            fontFamily: "ui-monospace, monospace",
-            marginTop: -2
+            color: brand.primaryFg,
+            fontSize: 20,
+            fontWeight: 600,
+            fontFamily: "Georgia, serif"
           }}
         >
           f

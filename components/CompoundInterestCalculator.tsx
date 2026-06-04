@@ -52,126 +52,130 @@ export default function CompoundInterestCalculator() {
 
   return (
     <div className="flex flex-col gap-block">
-      <CalculatorSection title="Ваши вложения" description="Сколько уже есть и сколько добавляете каждый месяц.">
-        <NumberField
-          label="Начальная сумма ₽"
-          hint="Деньги, которые уже лежат на счёте или в портфеле в момент старта расчёта."
-          value={initialAmount}
-          min={0}
-          step={1000}
-          formatThousands
-          onChange={setInitialAmount}
-        />
-        <NumberField
-          label="Ежемесячное пополнение"
-          hint="Фиксированная сумма, которую планируете добавлять каждый месяц на протяжении всего срока."
-          value={monthlyContribution}
-          min={0}
-          step={1000}
-          formatThousands
-          onChange={setMonthlyContribution}
-        />
-      </CalculatorSection>
+      <div className="calculator-layout">
+        <div className="flex flex-col gap-block">
+          <CalculatorSection title="Ваши вложения" description="Сколько уже есть и сколько добавляете каждый месяц.">
+            <NumberField
+              label="Начальная сумма ₽"
+              hint="Деньги, которые уже лежат на счёте или в портфеле в момент старта расчёта."
+              value={initialAmount}
+              min={0}
+              step={1000}
+              formatThousands
+              onChange={setInitialAmount}
+            />
+            <NumberField
+              label="Ежемесячное пополнение"
+              hint="Фиксированная сумма, которую планируете добавлять каждый месяц на протяжении всего срока."
+              value={monthlyContribution}
+              min={0}
+              step={1000}
+              formatThousands
+              onChange={setMonthlyContribution}
+            />
+          </CalculatorSection>
 
-      <CalculatorSection title="Условия роста" description="Ожидания по доходности и сроку инвестирования.">
-        <InputSlider
-          label="Годовая доходность"
-          hint="Средняя ожидаемая доходность в год до налогов. Для консервативного сценария часто берут 6–8%, для акций — около 10%."
-          value={annualRatePercent}
-          min={0}
-          max={30}
-          step={0.1}
-          suffix="%"
-          onChange={setAnnualRatePercent}
-        />
-        <InputSlider
-          label="Срок инвестирования"
-          hint="На сколько лет вперёд считаем. Чем длиннее срок, тем сильнее проявляется эффект сложного процента."
-          value={years}
-          min={1}
-          max={50}
-          step={1}
-          suffix="лет"
-          onChange={setYears}
-        />
-        <SelectField
-          label="Периодичность начисления"
-          hint="Как часто проценты «прибавляются» к капиталу. Чем чаще начисление, тем чуть выше итог при той же ставке."
-          value={frequency}
-          onChange={(value) => setFrequency(value as CompoundFrequency)}
-          options={[
-            { value: "yearly", label: "Ежегодно" },
-            { value: "quarterly", label: "Ежеквартально" },
-            { value: "monthly", label: "Ежемесячно" }
-          ]}
-          className="sm:col-span-2"
-        />
-      </CalculatorSection>
-
-      <section className="flex flex-col gap-6">
-        <h2 className="text-xl font-extrabold sm:text-2xl">Результаты</h2>
-        <ResultCard
-          variant="hero"
-          label="Итоговая сумма"
-          hint="Сколько будет на счёте в конце срока с учётом стартовой суммы, пополнений и начисленных процентов."
-          value={moneyFormat(result.total)}
-          subtitle={`Вложено ${moneyFormat(result.totalInvested)} · прибыль ${moneyFormat(result.profit)} · ${percentFormat(result.yieldPercent)}%`}
-        />
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          <ResultCard
-            variant="compact"
-            label="Вложено"
-            hint="Сумма ваших денег без учёта процентов: стартовый капитал + все ежемесячные пополнения."
-            value={moneyFormat(result.totalInvested)}
-          />
-          <ResultCard
-            variant="compact"
-            label="Заработано"
-            hint="Чистая прибыль: итоговая сумма минус всё, что вы внесли своими деньгами."
-            value={moneyFormat(result.profit)}
-            subtitleTone="success"
-          />
-          <ResultCard
-            variant="compact"
-            label="Доходность"
-            hint="Насколько выросли ваши вложения в процентах относительно суммы, которую вы внесли."
-            value={`${percentFormat(result.yieldPercent)}%`}
-            className="col-span-2 sm:col-span-1"
-          />
+          <CalculatorSection title="Условия роста" description="Ожидания по доходности и сроку инвестирования.">
+            <InputSlider
+              label="Годовая доходность"
+              hint="Средняя ожидаемая доходность в год до налогов. Для консервативного сценария часто берут 6–8%, для акций — около 10%."
+              value={annualRatePercent}
+              min={0}
+              max={30}
+              step={0.1}
+              suffix="%"
+              onChange={setAnnualRatePercent}
+            />
+            <InputSlider
+              label="Срок инвестирования"
+              hint="На сколько лет вперёд считаем. Чем длиннее срок, тем сильнее проявляется эффект сложного процента."
+              value={years}
+              min={1}
+              max={50}
+              step={1}
+              suffix="лет"
+              onChange={setYears}
+            />
+            <SelectField
+              label="Периодичность начисления"
+              hint="Как часто проценты «прибавляются» к капиталу. Чем чаще начисление, тем чуть выше итог при той же ставке."
+              value={frequency}
+              onChange={(value) => setFrequency(value as CompoundFrequency)}
+              options={[
+                { value: "yearly", label: "Ежегодно" },
+                { value: "quarterly", label: "Ежеквартально" },
+                { value: "monthly", label: "Ежемесячно" }
+              ]}
+              className="sm:col-span-2"
+            />
+          </CalculatorSection>
         </div>
-      </section>
+
+        <aside className="flex flex-col gap-4 lg:sticky lg:top-24">
+          <h2 className="type-h2">Результаты</h2>
+          <ResultCard
+            variant="hero"
+            label="Итоговая сумма"
+            hint="Сколько будет на счёте в конце срока с учётом стартовой суммы, пополнений и начисленных процентов."
+            value={moneyFormat(result.total)}
+            subtitle={`Вложено ${moneyFormat(result.totalInvested)} · прибыль ${moneyFormat(result.profit)} · ${percentFormat(result.yieldPercent)}%`}
+          />
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
+            <ResultCard
+              variant="compact"
+              label="Вложено"
+              hint="Сумма ваших денег без учёта процентов: стартовый капитал + все ежемесячные пополнения."
+              value={moneyFormat(result.totalInvested)}
+            />
+            <ResultCard
+              variant="compact"
+              label="Заработано"
+              hint="Чистая прибыль: итоговая сумма минус всё, что вы внесли своими деньгами."
+              value={moneyFormat(result.profit)}
+              subtitleTone="success"
+            />
+            <ResultCard
+              variant="compact"
+              label="Доходность"
+              hint="Насколько выросли ваши вложения в процентах относительно суммы, которую вы внесли."
+              value={`${percentFormat(result.yieldPercent)}%`}
+              className="sm:col-span-2 lg:col-span-1"
+            />
+          </div>
+        </aside>
+      </div>
 
       <section>
-        <h2 className="mb-1 text-base font-semibold">Динамика капитала</h2>
-        <p className="mb-3 text-sm text-text-muted">
-          Красная линия — с пополнениями, серая — только рост начальной суммы без новых взносов.
+        <h2 className="type-h2">Динамика капитала</h2>
+        <p className="mb-4 mt-2 text-sm text-text-muted">
+          Тёмная линия — с пополнениями, серая — только рост начальной суммы без новых взносов.
         </p>
         <CompoundChart data={chartData} />
       </section>
 
       <section>
-        <button type="button" onClick={() => setShowTable((prev) => !prev)} className="btn-fintech mb-3">
+        <button type="button" onClick={() => setShowTable((prev) => !prev)} className="btn-secondary mb-3">
           {showTable ? "Скрыть таблицу по годам" : "Показать таблицу по годам"}
         </button>
 
         {showTable ? (
-          <div className="table-fintech">
+          <div className="table-wrap">
             <table className="w-full border-collapse text-sm">
               <thead>
-                <tr className="bg-accent/10 text-left">
-                  <th className="border-b border-border px-3 py-2">Год</th>
-                  <th className="border-b border-border px-3 py-2">Баланс</th>
-                  <th className="border-b border-border px-3 py-2">Вложено</th>
-                  <th className="border-b border-border px-3 py-2">Прибыль</th>
+                <tr className="bg-bg text-left">
+                  <th className="border-b border-border px-3 py-2 font-medium">Год</th>
+                  <th className="border-b border-border px-3 py-2 font-medium">Баланс</th>
+                  <th className="border-b border-border px-3 py-2 font-medium">Вложено</th>
+                  <th className="border-b border-border px-3 py-2 font-medium">Прибыль</th>
                 </tr>
               </thead>
               <tbody>
                 {result.rows.map((row) => (
                   <tr key={row.year}>
                     <td className="border-b border-border px-3 py-2">{row.year}</td>
-                    <td className="border-b border-border px-3 py-2 font-mono">{moneyFormat(row.balance)}</td>
-                    <td className="border-b border-border px-3 py-2 font-mono">{moneyFormat(row.invested)}</td>
-                    <td className="border-b border-border px-3 py-2 font-mono">{moneyFormat(row.profit)}</td>
+                    <td className="border-b border-border px-3 py-2 font-mono tabular-nums">{moneyFormat(row.balance)}</td>
+                    <td className="border-b border-border px-3 py-2 font-mono tabular-nums">{moneyFormat(row.invested)}</td>
+                    <td className="border-b border-border px-3 py-2 font-mono tabular-nums">{moneyFormat(row.profit)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -180,17 +184,17 @@ export default function CompoundInterestCalculator() {
         ) : null}
       </section>
 
-      <section className="space-y-4">
-        <h2 className="text-base font-semibold">Что важно знать о сложном проценте</h2>
-        <p className="text-sm leading-relaxed">
+      <section className="prose-blog max-w-prose">
+        <h2 className="type-h2 !mt-0">Что важно знать о сложном проценте</h2>
+        <p className="text-sm">
           Сложный процент — это эффект, при котором прибыль начисляется не только на стартовый капитал, но и на уже
           полученные проценты. Поэтому капитал растёт ускоряющимися темпами на длинной дистанции.
         </p>
-        <p className="text-sm leading-relaxed">
+        <p className="text-sm">
           Для долгосрочного инвестора это ключевой механизм: регулярные пополнения и реинвестирование дают заметно
           больший результат, чем попытки угадать идеальную точку входа.
         </p>
-        <p className="text-sm leading-relaxed">
+        <p className="text-sm">
           Пример: 100 000 ₽ под 10% на 20 лет превращаются примерно в{" "}
           <span className="font-mono">
             {moneyFormat(
@@ -205,9 +209,9 @@ export default function CompoundInterestCalculator() {
           </span>{" "}
           даже без дополнительных вложений.
         </p>
-        <p className="text-sm leading-relaxed">
+        <p className="text-sm">
           Если хотите оценить, когда можно достичь финансовой независимости, используйте{" "}
-          <Link href="/fire-calculator" className="link-fintech">
+          <Link href="/fire-calculator" className="link">
             FIRE-калькулятор
           </Link>
           .

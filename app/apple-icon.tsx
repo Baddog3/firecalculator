@@ -15,16 +15,16 @@ export default function AppleIcon() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: brand.accent,
-          borderRadius: 36
+          background: brand.primary,
+          borderRadius: 32
         }}
       >
         <span
           style={{
-            color: brand.text,
-            fontSize: 96,
-            fontWeight: 700,
-            fontFamily: "ui-monospace, monospace",
+            color: brand.primaryFg,
+            fontSize: 88,
+            fontWeight: 600,
+            fontFamily: "Georgia, serif",
             lineHeight: 1
           }}
         >
@@ -32,12 +32,12 @@ export default function AppleIcon() {
         </span>
         <span
           style={{
-            color: brand.textMuted,
-            fontSize: 18,
-            fontWeight: 600,
+            color: brand.textSubtle,
+            fontSize: 16,
+            fontWeight: 500,
             fontFamily: "ui-monospace, monospace",
-            letterSpacing: 1,
-            marginTop: 8
+            letterSpacing: 2,
+            marginTop: 6
           }}
         >
           calc

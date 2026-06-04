@@ -5,8 +5,8 @@ export default function DisclaimerPage() {
     <div className="container-main page-shell">
       <PageHeader title="Дисклеймер" />
 
-      <div className="card-fintech mx-auto max-w-3xl space-y-6 p-card text-base leading-relaxed">
-        <p className="font-semibold">
+      <div className="card mx-auto max-w-prose space-y-6 p-card text-base leading-relaxed">
+        <p className="font-medium">
           Информация на сайте представлена в образовательных целях и не является индивидуальной инвестиционной
           рекомендацией.
         </p>

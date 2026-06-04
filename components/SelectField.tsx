@@ -24,12 +24,7 @@ export default function SelectField({
       <div className="mb-1">
         <FieldLabel label={label} hint={hint} htmlFor={selectId} />
       </div>
-      <select
-        id={selectId}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="input-fintech"
-      >
+      <select id={selectId} value={value} onChange={(event) => onChange(event.target.value)} className="input">
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
