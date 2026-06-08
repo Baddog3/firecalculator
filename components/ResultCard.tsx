@@ -29,7 +29,7 @@ export default function ResultCard({
 }: ResultCardProps) {
   if (variant === "hero") {
     return (
-      <div className={`card border-border-strong p-card ${className ?? ""}`}>
+      <div className={`card border-accent/30 bg-accent-muted/20 p-card ${className ?? ""}`}>
         <p className="text-sm font-medium text-text-muted">
           <FieldLabel label={label} hint={hint} />
         </p>

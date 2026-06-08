@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Literata } from "next/font/google";
+import { IBM_Plex_Sans, JetBrains_Mono, Literata } from "next/font/google";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import YandexMetrika from "@/components/YandexMetrika";
@@ -9,10 +9,10 @@ import "@/styles/globals.css";
 
 const siteUrl = getSiteUrl();
 
-const inter = Inter({
+const plexSans = IBM_Plex_Sans({
   subsets: ["latin", "cyrillic"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-inter"
+  variable: "--font-plex-sans"
 });
 
 const literata = Literata({
@@ -54,8 +54,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ru">
       <body
-        className={`${inter.variable} ${literata.variable} ${jetbrainsMono.variable} min-h-screen bg-bg font-sans text-text antialiased`}
+        className={`${plexSans.variable} ${literata.variable} ${jetbrainsMono.variable} min-h-screen bg-bg font-sans text-text antialiased`}
       >
+        <div className="site-bg" aria-hidden />
         <YandexMetrika />
         <Header />
         <main>{children}</main>

@@ -26,10 +26,10 @@ export default function Header() {
   const isBlogActive = pathname.startsWith("/blog");
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-surface/80 shadow-sm backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-border/80 bg-surface/85 backdrop-blur-md">
       <div className="container-main flex h-16 items-center justify-between">
         <Link href="/" className="group flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-bg font-display text-sm font-semibold text-text transition-colors group-hover:border-border-strong">
+          <span className="flex h-9 w-9 items-center justify-center rounded-md bg-accent font-display text-sm font-semibold text-accent-fg transition-colors group-hover:bg-accent-hover">
             fc
           </span>
           <span className="font-display text-lg font-semibold tracking-tight">{brand.name}</span>
@@ -46,7 +46,7 @@ export default function Header() {
 
         <button
           type="button"
-          className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-text transition-colors hover:border-border-strong hover:bg-bg md:hidden"
+          className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-surface text-text transition-colors hover:border-accent hover:bg-accent-muted md:hidden"
           onClick={() => setOpen((prev) => !prev)}
           aria-expanded={open}
           aria-label={open ? "Закрыть меню" : "Открыть меню"}
@@ -66,8 +66,8 @@ export default function Header() {
                   onClick={() => setOpen(false)}
                   className={`block rounded-md px-3 py-2.5 text-sm ${
                     pathname.startsWith(item.href)
-                      ? "bg-bg font-semibold text-text"
-                      : "font-medium text-text-muted hover:bg-bg hover:text-text"
+                      ? "bg-accent-muted font-semibold text-accent"
+                      : "font-medium text-text-muted hover:bg-accent-muted hover:text-accent"
                   }`}
                 >
                   {item.label}
@@ -79,7 +79,9 @@ export default function Header() {
             href="/blog"
             onClick={() => setOpen(false)}
             className={`mt-2 block rounded-md px-3 py-2.5 text-sm ${
-              isBlogActive ? "bg-bg font-semibold text-text" : "font-medium text-text-muted hover:bg-bg hover:text-text"
+              isBlogActive
+                ? "bg-accent-muted font-semibold text-accent"
+                : "font-medium text-text-muted hover:bg-accent-muted hover:text-accent"
             }`}
           >
             Блог

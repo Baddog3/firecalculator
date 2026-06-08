@@ -19,6 +19,12 @@ const config: Config = {
         primary: "var(--primary)",
         "primary-hover": "var(--primary-hover)",
         "primary-fg": "var(--primary-fg)",
+        accent: "var(--accent)",
+        "accent-hover": "var(--accent-hover)",
+        "accent-fg": "var(--accent-fg)",
+        "accent-muted": "var(--accent-muted)",
+        gold: "var(--gold)",
+        "gold-muted": "var(--gold-muted)",
         ring: "var(--ring)",
         success: "var(--success)",
         warning: "var(--warning)",
@@ -27,7 +33,7 @@ const config: Config = {
         "chart-grid": "var(--chart-grid)"
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        sans: ["var(--font-plex-sans)", "system-ui", "sans-serif"],
         display: ["var(--font-literata)", "Georgia", "serif"],
         mono: ["var(--font-jetbrains-mono)", "ui-monospace", "monospace"]
       },
@@ -46,8 +52,9 @@ const config: Config = {
         lg: "var(--radius-lg)"
       },
       boxShadow: {
-        sm: "0 1px 2px rgba(28, 25, 23, 0.05)",
-        md: "0 4px 12px rgba(28, 25, 23, 0.08)"
+        sm: "0 1px 3px rgba(26, 24, 20, 0.06)",
+        md: "0 4px 16px rgba(26, 24, 20, 0.08)",
+        accent: "0 4px 20px rgba(29, 107, 79, 0.12)"
       }
     }
   },

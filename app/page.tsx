@@ -59,14 +59,23 @@ export default function HomePage() {
 
   return (
     <div className="container-main home-shell">
-      <header className="mb-12 max-w-2xl">
-        <h1 className="type-display">Финансовые калькуляторы</h1>
-        <p className="mt-4 text-base text-text-muted sm:text-lg">
-          Бесплатно · без регистрации · на русском языке
+      <header className="animate-fade-up mb-14 max-w-2xl">
+        <span className="hero-badge mb-6">
+          <span className="hero-badge-dot" />
+          {calculators.length} калькулятора · бесплатно
+        </span>
+        <h1 className="type-display">
+          Считайте путь
+          <br />
+          <span className="text-accent">к финансовой свободе</span>
+        </h1>
+        <p className="mt-5 text-base leading-relaxed text-text-muted sm:text-lg">
+          FIRE, сложный процент, ETF и недвижимость — точные расчёты без регистрации, на русском языке.
         </p>
+        <div className="accent-rule mt-8" />
       </header>
 
-      <section className="mb-14">
+      <section className="animate-fade-up animate-fade-up-delay-1 mb-16">
         <ul className="grid-symmetric grid sm:grid-cols-2 lg:grid-cols-4">
           {calculators.map((calc) => (
             <CalculatorCard
@@ -82,11 +91,14 @@ export default function HomePage() {
         </ul>
       </section>
 
-      <section>
+      <section className="animate-fade-up animate-fade-up-delay-2">
         <div className="mb-6 flex items-center justify-between gap-4">
-          <h2 className="type-h2">Статьи</h2>
-          <Link href="/blog" className="nav-link shrink-0">
-            Смотреть все →
+          <div>
+            <h2 className="type-h2">Статьи</h2>
+            <p className="mt-1 text-sm text-text-muted">Разборы, гайды и сравнения для инвесторов</p>
+          </div>
+          <Link href="/blog" className="nav-link shrink-0 font-medium text-accent">
+            Все статьи →
           </Link>
         </div>
         <BlogPostList posts={posts} compact />

@@ -23,12 +23,12 @@ const footerSections = [
 
 export default function Footer() {
   return (
-    <footer className="mt-auto border-t border-border bg-surface">
+    <footer className="mt-auto border-t border-border bg-surface/60">
       <div className="container-main py-12 md:py-16">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           <div className="flex flex-col gap-3">
             <Link href="/" className="inline-flex items-center gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-bg font-display text-sm font-semibold">
+              <span className="flex h-9 w-9 items-center justify-center rounded-md bg-accent font-display text-sm font-semibold text-accent-fg">
                 fc
               </span>
               <span className="font-display text-lg font-semibold">{brand.name}</span>
@@ -46,7 +46,7 @@ export default function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-text-muted transition-colors hover:text-text"
+                      className="text-sm text-text-muted transition-colors hover:text-accent"
                     >
                       {link.label}
                     </Link>

@@ -1,19 +1,19 @@
 export const brand = {
-  bg: "#fafaf9",
-  surface: "#ffffff",
-  text: "#1c1917",
-  textMuted: "#78716c",
-  textSubtle: "#a8a29e",
-  primary: "#1c1917",
-  primaryFg: "#fafaf9",
-  border: "#e7e5e4",
+  bg: "#f5f1e8",
+  surface: "#fffdf8",
+  text: "#1a1814",
+  textMuted: "#6b6560",
+  textSubtle: "#9c958c",
+  primary: "#1d6b4f",
+  primaryFg: "#f5f1e8",
+  border: "#e2dbd0",
   name: "firecalc.ru",
   title: "Финансовые калькуляторы",
   tagline: "FIRE · сложный процент · ETF · аренда vs ипотека",
   chart: {
-    primary: "#1c1917",
-    secondary: "#a8a29e",
-    grid: "#f5f5f4",
-    muted: "#78716c"
+    primary: "#1d6b4f",
+    secondary: "#9c958c",
+    grid: "#ebe6dc",
+    muted: "#6b6560"
   }
 } as const;

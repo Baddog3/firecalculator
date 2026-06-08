@@ -3,23 +3,30 @@
 @tailwind utilities;
 
 :root {
-  --bg: #fafaf9;
-  --surface: #ffffff;
+  --bg: #f5f1e8;
+  --bg-pattern: rgba(29, 107, 79, 0.04);
+  --surface: #fffdf8;
   --surface-raised: #ffffff;
-  --border: #e7e5e4;
-  --border-strong: #d6d3d1;
-  --text: #1c1917;
-  --text-muted: #78716c;
-  --text-subtle: #a8a29e;
-  --primary: #1c1917;
-  --primary-hover: #292524;
-  --primary-fg: #fafaf9;
-  --ring: rgba(28, 25, 23, 0.12);
+  --border: #e2dbd0;
+  --border-strong: #cfc6b8;
+  --text: #1a1814;
+  --text-muted: #6b6560;
+  --text-subtle: #9c958c;
+  --primary: #1a1814;
+  --primary-hover: #2d2a24;
+  --primary-fg: #f5f1e8;
+  --accent: #1d6b4f;
+  --accent-hover: #165a42;
+  --accent-fg: #f5f1e8;
+  --accent-muted: rgba(29, 107, 79, 0.1);
+  --gold: #b8860b;
+  --gold-muted: rgba(184, 134, 11, 0.12);
+  --ring: rgba(29, 107, 79, 0.18);
   --success: #15803d;
   --warning: #c2410c;
-  --chart-1: #1c1917;
-  --chart-2: #a8a29e;
-  --chart-grid: #f5f5f4;
+  --chart-1: #1d6b4f;
+  --chart-2: #9c958c;
+  --chart-grid: #ebe6dc;
 
   --container-max: 1120px;
   --container-px: 24px;
@@ -30,7 +37,7 @@
   --grid-gap: 16px;
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-lg: 12px;
+  --radius-lg: 14px;
 }
 
 @media (max-width: 768px) {
@@ -81,8 +88,67 @@ a {
 }
 
 ::selection {
-  background: var(--border-strong);
+  background: var(--accent-muted);
   color: var(--text);
+}
+
+.site-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(29, 107, 79, 0.07), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(184, 134, 11, 0.05), transparent),
+    var(--bg);
+}
+
+.site-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+}
+
+.site-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--bg-pattern) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bg-pattern) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, black 0%, transparent 60%);
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out both;
+}
+
+.animate-fade-up-delay-1 {
+  animation-delay: 0.08s;
+}
+
+.animate-fade-up-delay-2 {
+  animation-delay: 0.16s;
+}
+
+.animate-fade-up-delay-3 {
+  animation-delay: 0.24s;
 }
 
 .container-main {
@@ -110,7 +176,7 @@ a {
   }
 
   .type-display {
-    @apply font-display text-4xl font-semibold leading-tight tracking-tight text-balance sm:text-5xl;
+    @apply font-display text-4xl font-semibold leading-[1.1] tracking-tight text-balance sm:text-5xl lg:text-[3.25rem];
   }
 
   .type-h1 {
@@ -118,7 +184,7 @@ a {
   }
 
   .type-h2 {
-    @apply text-xl font-semibold tracking-tight;
+    @apply font-display text-xl font-semibold tracking-tight;
   }
 
   .type-caption {
@@ -129,9 +195,28 @@ a {
     @apply font-mono text-2xl font-semibold tabular-nums tracking-tight sm:text-3xl;
   }
 
+  .accent-rule {
+    @apply h-px w-12;
+    background-color: var(--accent);
+  }
+
+  .hero-badge {
+    @apply inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3.5 py-1.5 text-xs font-medium text-text-muted backdrop-blur-sm;
+    background-color: color-mix(in srgb, var(--surface) 85%, transparent);
+  }
+
+  .hero-badge-dot {
+    @apply h-1.5 w-1.5 rounded-full;
+    background-color: var(--accent);
+  }
+
   .input {
     @apply w-full rounded-[var(--radius-md)] border border-border bg-surface px-4 py-3 font-mono text-sm text-text transition-colors;
-    @apply placeholder:text-text-subtle focus:border-border-strong focus:outline-none;
+    @apply placeholder:text-text-subtle focus:outline-none;
+  }
+
+  .input:focus {
+    border-color: var(--accent);
   }
 
   .input:focus-visible {
@@ -140,7 +225,11 @@ a {
 
   .input-sm {
     @apply w-28 rounded-[var(--radius-md)] border border-border bg-surface px-3 py-2 text-right font-mono text-sm text-text transition-colors;
-    @apply focus:border-border-strong focus:outline-none;
+    @apply focus:outline-none;
+  }
+
+  .input-sm:focus {
+    border-color: var(--accent);
   }
 
   .input-sm:focus-visible {
@@ -148,29 +237,36 @@ a {
   }
 
   .card {
-    @apply rounded-[var(--radius-lg)] border border-border bg-surface;
+    @apply rounded-[var(--radius-lg)] border border-border bg-surface shadow-sm;
   }
 
   .card-interactive {
-    @apply rounded-[var(--radius-lg)] border border-border bg-surface transition-colors duration-200;
+    @apply rounded-[var(--radius-lg)] border border-border bg-surface shadow-sm transition-all duration-300;
   }
 
   .card-interactive:hover {
-    border-color: var(--border-strong);
-    background: var(--surface);
+    border-color: var(--accent);
+    box-shadow: 0 8px 24px rgba(29, 107, 79, 0.08);
+    transform: translateY(-2px);
   }
 
   .card-calculator {
-    @apply rounded-[var(--radius-md)] border border-border bg-surface transition-colors duration-200;
+    @apply rounded-[var(--radius-md)] border border-border bg-surface shadow-sm transition-all duration-200;
   }
 
   .card-calculator:hover {
-    border-color: var(--border-strong);
+    border-color: var(--accent);
+    box-shadow: 0 4px 16px rgba(29, 107, 79, 0.07);
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-[var(--radius-md)] bg-primary px-5 py-2.5 text-sm font-semibold text-primary-fg transition-colors;
-    @apply hover:bg-primary-hover focus-visible:outline-none;
+    @apply inline-flex items-center justify-center rounded-[var(--radius-md)] px-5 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-none;
+    background-color: var(--accent);
+    color: var(--accent-fg);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--accent-hover);
   }
 
   .btn-primary:focus-visible {
@@ -178,8 +274,12 @@ a {
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-[var(--radius-md)] border border-border bg-surface px-5 py-2.5 text-sm font-semibold text-text transition-colors;
-    @apply hover:border-border-strong hover:bg-bg focus-visible:outline-none;
+    @apply inline-flex items-center justify-center rounded-[var(--radius-md)] border border-border bg-surface px-5 py-2.5 text-sm font-semibold text-text transition-colors focus-visible:outline-none;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    background-color: var(--accent-muted);
   }
 
   .btn-secondary:focus-visible {
@@ -187,8 +287,12 @@ a {
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center rounded-[var(--radius-md)] px-4 py-2 text-sm font-medium text-text-muted transition-colors;
-    @apply hover:bg-bg hover:text-text focus-visible:outline-none;
+    @apply inline-flex items-center justify-center rounded-[var(--radius-md)] px-4 py-2 text-sm font-medium text-text-muted transition-colors focus-visible:outline-none;
+  }
+
+  .btn-ghost:hover {
+    background-color: var(--accent-muted);
+    color: var(--accent);
   }
 
   .btn-ghost:focus-visible {
@@ -196,15 +300,28 @@ a {
   }
 
   .table-wrap {
-    @apply overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-surface;
+    @apply overflow-x-auto rounded-[var(--radius-lg)] border border-border bg-surface shadow-sm;
   }
 
   .link {
-    @apply font-medium text-text underline decoration-border-strong decoration-1 underline-offset-4 transition-colors hover:decoration-text;
+    @apply font-medium underline decoration-1 underline-offset-4 transition-colors;
+    color: var(--accent);
+    text-decoration-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+
+  .link:hover {
+    text-decoration-color: var(--accent);
   }
 
   .badge-muted {
-    @apply inline-flex items-center rounded-[var(--radius-sm)] border border-border px-2.5 py-1 text-xs font-medium uppercase tracking-wider text-text-muted;
+    @apply inline-flex items-center rounded-[var(--radius-sm)] border border-border bg-bg px-2.5 py-1 text-xs font-medium uppercase tracking-wider text-text-muted;
+  }
+
+  .badge-accent {
+    @apply inline-flex items-center rounded-[var(--radius-sm)] border px-2.5 py-1 text-xs font-semibold uppercase tracking-wider;
+    background-color: var(--accent-muted);
+    color: var(--accent);
+    border-color: color-mix(in srgb, var(--accent) 25%, transparent);
   }
 
   .section-title {
@@ -212,7 +329,7 @@ a {
   }
 
   .home-shell {
-    padding-top: 32px;
+    padding-top: 40px;
     padding-bottom: var(--space-section);
   }
 
@@ -222,11 +339,16 @@ a {
   }
 
   .nav-link {
-    @apply text-sm font-medium text-text-muted transition-colors hover:text-text;
+    @apply text-sm font-medium text-text-muted transition-colors;
+  }
+
+  .nav-link:hover {
+    color: var(--accent);
   }
 
   .nav-link-active {
-    @apply text-sm font-semibold text-text underline decoration-text decoration-2 underline-offset-8;
+    @apply text-sm font-semibold;
+    color: var(--accent);
   }
 
   .prose-blog h2 {
@@ -256,5 +378,19 @@ a {
 
   .calculator-layout {
     @apply grid gap-8 lg:grid-cols-[1fr_360px] lg:items-start;
+  }
+
+  .icon-box {
+    @apply flex shrink-0 items-center justify-center rounded-md border border-border transition-colors;
+    background-color: var(--accent-muted);
+    color: var(--accent);
+  }
+
+  .icon-box-lg {
+    @apply icon-box h-12 w-12;
+  }
+
+  .icon-box-md {
+    @apply icon-box h-10 w-10;
   }
 }
