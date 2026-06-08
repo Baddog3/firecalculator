@@ -8,7 +8,7 @@ const SLUG_BY_FILENAME: Record<string, string> = {
   "статья_FIRE_и_правило_4%.md": "fire-i-pravilo-4",
   "статья_сложный_процент (1).md": "slozhnyj-procent",
   "статья_сложный_процент (1).md": "slozhnyj-procent",
-  "статья_сравнение_брокеров_Европа.md": "sravnenie-brokerov-evropa",
+  "статья_сравнение_брокеров_Россия.md": "sravnenie-brokerov-rossiya",
   "статья_аренда_vs_ипотека.md": "arenda-vs-ipoteka",
   "статья_подушка_безопасности.md": "podushka-bezopasnosti",
   "статья_с_чего_начать_инвестировать.md": "s-chego-nachat-investirovat",

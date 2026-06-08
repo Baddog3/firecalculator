@@ -8,13 +8,13 @@ const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   title: "Блог для инвесторов — статьи и разборы",
-  description: "Практические материалы по инвестициям, FIRE и личным финансам для русскоязычных инвесторов.",
+  description: "Практические материалы по инвестициям, FIRE, БПИФам и личным финансам для России.",
   alternates: {
     canonical: "/blog"
   },
   openGraph: {
     title: "Блог для инвесторов — статьи и разборы",
-    description: "Практические материалы по инвестициям, FIRE и личным финансам для русскоязычных инвесторов.",
+    description: "Практические материалы по инвестициям, FIRE, БПИФам и личным финансам для России.",
     url: `${siteUrl}/blog`
   }
 };
@@ -27,7 +27,7 @@ export default function BlogPage() {
       <PageHeader
         badge="Блог"
         title="Статьи для инвесторов"
-        description="Материалы об инвестициях, FIRE, ETF и личных финансах для России и Европы."
+        description="Практические материалы по инвестициям, FIRE, БПИФам и личным финансам для России."
         centered
       />
       <BlogPostList posts={posts} />

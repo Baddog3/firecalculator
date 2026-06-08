@@ -5,10 +5,10 @@ export default function BrokerCta() {
     <section className="card border-accent/20 bg-accent-muted/40 p-card">
       <p className="font-display text-lg font-semibold">Ищете брокера для инвестиций?</p>
       <p className="mt-2 text-sm text-text-muted">
-        Сравните условия европейских брокеров для русскоязычных инвесторов.
+        Разбор Т-Инвестиций, Сбера, БКС и Финама — кому что подходит.
       </p>
-      <Link href="/blog/sravnenie-brokerov-evropa" className="btn-primary mt-5">
-        Сравнить брокеров →
+      <Link href="/blog/sravnenie-brokerov-rossiya" className="btn-primary mt-5">
+        Как выбрать брокера →
       </Link>
     </section>
   );
