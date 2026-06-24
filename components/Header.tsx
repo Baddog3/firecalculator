@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { brand } from "@/lib/brand";
@@ -10,6 +10,7 @@ const calculators = [
   { href: "/compound-interest", label: "Сложный процент" },
   { href: "/fire-calculator", label: "FIRE" },
   { href: "/etf-calculator", label: "ETF" },
+  { href: "/emergency-fund", label: "Подушка" },
   { href: "/rent-vs-buy", label: "Аренда vs ипотека" }
 ];
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/Link";
 import BlogPostList from "@/components/BlogPostList";
 import CalculatorCard from "@/components/CalculatorCard";
 import { calculatorIcons } from "@/lib/calculator-icons";
@@ -46,6 +46,13 @@ const calculators = [
     tag: "ETF"
   },
   {
+    key: "emergency-fund" as const,
+    title: "Подушка безопасности",
+    description: "Целевая сумма резерва и срок накопления.",
+    href: "/emergency-fund",
+    tag: "Безопасность"
+  },
+  {
     key: "rent-vs-buy" as const,
     title: "Аренда vs ипотека",
     description: "Сравнение покупки и аренды жилья.",
@@ -62,7 +69,7 @@ export default function HomePage() {
       <header className="animate-fade-up mb-14 max-w-2xl">
         <span className="hero-badge mb-6">
           <span className="hero-badge-dot" />
-          {calculators.length} калькулятора · бесплатно
+          {calculators.length} калькуляторов · бесплатно
         </span>
         <h1 className="type-display">
           Считайте путь
@@ -70,7 +77,7 @@ export default function HomePage() {
           <span className="text-accent">к финансовой свободе</span>
         </h1>
         <p className="mt-5 text-base leading-relaxed text-text-muted sm:text-lg">
-          FIRE, сложный процент, ETF и недвижимость — точные расчёты без регистрации, на русском языке.
+          FIRE, подушка безопасности, сложный процент, ETF и недвижимость — точные расчёты без регистрации, на русском языке.
         </p>
         <div className="accent-rule mt-8" />
       </header>

@@ -9,7 +9,7 @@ export const brand = {
   border: "#e2dbd0",
   name: "firecalc.ru",
   title: "Финансовые калькуляторы",
-  tagline: "FIRE · сложный процент · ETF · аренда vs ипотека",
+  tagline: "FIRE · подушка · сложный процент · ETF · аренда vs ипотека",
   chart: {
     primary: "#1d6b4f",
     secondary: "#9c958c",

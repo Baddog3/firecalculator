@@ -2,6 +2,9 @@ Options -MultiViews
 RewriteEngine On
 RewriteBase /
 
+# Legacy URL → актуальная статья о брокерах в России
+RewriteRule ^blog/sravnenie-brokerov-evropa/?$ /blog/sravnenie-brokerov-rossiya/ [R=301,L]
+
 # Serve existing files and directories
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d

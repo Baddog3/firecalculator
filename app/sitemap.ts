@@ -17,6 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/fire-calculator`, lastModified: now },
     { url: `${baseUrl}/blog`, lastModified: now },
     { url: `${baseUrl}/etf-calculator`, lastModified: now },
+    { url: `${baseUrl}/emergency-fund`, lastModified: now },
     { url: `${baseUrl}/rent-vs-buy`, lastModified: now },
     ...blogEntries
   ];

@@ -472,3 +472,71 @@ export function calculateEtf(input: EtfInput): EtfResult {
     rows
   };
 }
+
+export type EmergencyFundTargetMonths = 3 | 6 | 12;
+
+export type EmergencyFundInput = {
+  monthlyExpenses: number;
+  currentSavings: number;
+  targetMonths: EmergencyFundTargetMonths;
+  monthlyContribution: number;
+  annualReturnPercent: number;
+};
+
+export type EmergencyFundMonthRow = {
+  month: number;
+  balance: number;
+};
+
+export type EmergencyFundResult = {
+  targetAmount: number;
+  remaining: number;
+  progressPercent: number;
+  monthsToTarget: number | null;
+  isComplete: boolean;
+  rows: EmergencyFundMonthRow[];
+};
+
+export function calculateEmergencyFund(input: EmergencyFundInput): EmergencyFundResult {
+  const monthlyExpenses = Math.max(0, input.monthlyExpenses);
+  const currentSavings = Math.max(0, input.currentSavings);
+  const monthlyContribution = Math.max(0, input.monthlyContribution);
+  const annualReturn = Math.max(0, input.annualReturnPercent) / 100;
+  const monthlyRate = annualReturn / 12;
+
+  const targetAmount = monthlyExpenses * input.targetMonths;
+  const remaining = Math.max(0, targetAmount - currentSavings);
+  const progressPercent = targetAmount > 0 ? Math.min(100, (currentSavings / targetAmount) * 100) : 100;
+  const isComplete = remaining <= 0;
+
+  const rows: EmergencyFundMonthRow[] = [{ month: 0, balance: currentSavings }];
+  let balance = currentSavings;
+  let monthsToTarget: number | null = isComplete ? 0 : null;
+  const maxMonths = 600;
+
+  for (let month = 1; month <= maxMonths; month += 1) {
+    balance = balance * (1 + monthlyRate) + monthlyContribution;
+    rows.push({ month, balance });
+
+    if (monthsToTarget === null && balance >= targetAmount) {
+      monthsToTarget = month;
+      break;
+    }
+  }
+
+  if (!isComplete && monthlyContribution === 0 && annualReturn === 0) {
+    monthsToTarget = null;
+  }
+
+  const chartRows =
+    monthsToTarget !== null ? rows.slice(0, monthsToTarget + 1) : rows.slice(0, Math.min(rows.length, 61));
+
+  return {
+    targetAmount,
+    remaining,
+    progressPercent,
+    monthsToTarget,
+    isComplete,
+    rows: chartRows
+  };
+}

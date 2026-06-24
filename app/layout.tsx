@@ -33,11 +33,11 @@ export const metadata: Metadata = {
     default: brand.title,
     template: `%s — ${brand.name}`
   },
-  description: "Калькуляторы для инвесторов на русском языке: FIRE, сложный процент, ETF и аренда vs ипотека.",
+  description: "Калькуляторы для инвесторов на русском языке: FIRE, подушка безопасности, сложный процент, ETF и аренда vs ипотека.",
   applicationName: brand.name,
   openGraph: {
     title: brand.title,
-    description: "Калькуляторы для инвесторов на русском языке: FIRE, сложный процент, ETF и аренда vs ипотека.",
+    description: "Калькуляторы для инвесторов на русском языке: FIRE, подушка безопасности, сложный процент, ETF и аренда vs ипотека.",
     url: siteUrl,
     siteName: brand.name,
     locale: "ru_RU",

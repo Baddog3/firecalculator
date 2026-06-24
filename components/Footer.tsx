@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/Link";
 import { brand } from "@/lib/brand";
 
 const footerSections = [
@@ -8,6 +8,7 @@ const footerSections = [
       { href: "/compound-interest", label: "Сложный процент" },
       { href: "/fire-calculator", label: "FIRE" },
       { href: "/etf-calculator", label: "ETF" },
+      { href: "/emergency-fund", label: "Подушка безопасности" },
       { href: "/rent-vs-buy", label: "Аренда vs ипотека" }
     ]
   },
