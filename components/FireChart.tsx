@@ -4,6 +4,7 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
+  Line,
   ReferenceDot,
   ReferenceLine,
   ResponsiveContainer,
@@ -16,13 +17,15 @@ import { chartTooltipStyle } from "@/lib/chart-styles";
 
 type FireChartPoint = {
   age: number;
-  portfolio: number;
+  portfolioRecommended: number;
+  portfolioCurrent: number;
 };
 
 type FireChartProps = {
   data: FireChartPoint[];
   fireTarget: number;
   intersectionAge: number | null;
+  intersectionAgeCurrent: number | null;
 };
 
 const rubFormat = (value: number) =>
@@ -34,9 +37,17 @@ const rubFormat = (value: number) =>
 
 const { primary, secondary, grid, muted } = brand.chart;
 
-export default function FireChart({ data, fireTarget, intersectionAge }: FireChartProps) {
-  const intersectionPoint = intersectionAge
+export default function FireChart({
+  data,
+  fireTarget,
+  intersectionAge,
+  intersectionAgeCurrent
+}: FireChartProps) {
+  const intersectionRecommended = intersectionAge
     ? data.find((point) => point.age === intersectionAge)
+    : null;
+  const intersectionCurrent = intersectionAgeCurrent
+    ? data.find((point) => point.age === intersectionAgeCurrent)
     : null;
 
   return (
@@ -59,7 +70,7 @@ export default function FireChart({ data, fireTarget, intersectionAge }: FireCha
             tickLine={false}
           />
           <Tooltip
-            formatter={(value: number) => rubFormat(value)}
+            formatter={(value: number, name: string) => [rubFormat(value), name]}
             labelFormatter={(age) => `Возраст: ${age}`}
             contentStyle={chartTooltipStyle}
           />
@@ -76,19 +87,39 @@ export default function FireChart({ data, fireTarget, intersectionAge }: FireCha
           />
           <Area
             type="monotone"
-            dataKey="portfolio"
+            dataKey="portfolioRecommended"
             stroke={primary}
             strokeWidth={2}
             fill="url(#fireGradient)"
-            name="Портфель"
+            name="Рекомендуемый взнос"
           />
-          {intersectionPoint ? (
+          <Line
+            type="monotone"
+            dataKey="portfolioCurrent"
+            stroke={secondary}
+            strokeWidth={2}
+            strokeDasharray="6 4"
+            dot={false}
+            name="Текущий взнос"
+          />
+          {intersectionRecommended ? (
             <ReferenceDot
-              x={intersectionPoint.age}
-              y={intersectionPoint.portfolio}
+              x={intersectionRecommended.age}
+              y={intersectionRecommended.portfolioRecommended}
               r={5}
               fill={primary}
               stroke={primary}
+              strokeWidth={2}
+            />
+          ) : null}
+          {intersectionCurrent &&
+          intersectionCurrent.age !== intersectionRecommended?.age ? (
+            <ReferenceDot
+              x={intersectionCurrent.age}
+              y={intersectionCurrent.portfolioCurrent}
+              r={5}
+              fill={secondary}
+              stroke={secondary}
               strokeWidth={2}
             />
           ) : null}

@@ -19,7 +19,7 @@ const moneyFormat = (value: number) =>
 
 const yearsFormat = (value: number | null) => {
   if (value === null) {
-    return "50+ лет";
+    return "100+ лет";
   }
 
   if (value === 0) {
@@ -65,9 +65,10 @@ export default function FireCalculator() {
     ]
   );
 
-  const chartData = result.rows.map((row) => ({
+  const chartData = result.rows.map((row, index) => ({
     age: row.age,
-    portfolio: Math.round(row.portfolio)
+    portfolioRecommended: Math.round(row.portfolio),
+    portfolioCurrent: Math.round(result.rowsCurrent[index]?.portfolio ?? row.portfolio)
   }));
 
   const savingsGap = result.monthlySavingsNeeded - monthlySavingsCurrent;
@@ -80,6 +81,18 @@ export default function FireCalculator() {
         : `До цели: ${result.yearsUntilRetirement} лет`;
 
   const savingsSubtitleTone = savingsGap > 0 ? "warning" : savingsGap < 0 ? "success" : "default";
+
+  const fireHeroSubtitle =
+    result.monthlySavingsNeeded > 0
+      ? `Нужно ${moneyFormat(result.monthlySavingsNeeded)}/мес · выход в ${retirementAge} лет`
+      : `Цель достижима без доп. взносов · выход в ${retirementAge} лет`;
+
+  const fireAgeSubtitle =
+    result.yearsToFire === null
+      ? `При ${moneyFormat(monthlySavingsCurrent)}/мес — недостижимо за 100 лет`
+      : result.yearsToFire === 0
+        ? "FIRE-цель уже достигнута"
+        : `FIRE в ${currentAge + (result.yearsToFire ?? 0)} лет при ${moneyFormat(monthlySavingsCurrent)}/мес`;
 
   return (
     <div className="flex flex-col gap-block">
@@ -181,7 +194,7 @@ export default function FireCalculator() {
             label="FIRE-число"
             hint="Размер капитала, которого нужно достичь, чтобы покрывать расходы выбранной ставкой изъятия."
             value={moneyFormat(result.fireNumber)}
-            subtitle={`${yearsFormat(result.yearsToFire)} · ${moneyFormat(result.monthlySavingsNeeded)}/мес · выход в ${retirementAge} лет`}
+            subtitle={fireHeroSubtitle}
           />
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
             <ResultCard
@@ -197,7 +210,14 @@ export default function FireCalculator() {
               label="Лет до FIRE"
               hint="Через сколько лет достигнете FIRE-цели при текущем темпе отложений и доходности."
               value={yearsFormat(result.yearsToFire)}
-              subtitle={`При ${moneyFormat(monthlySavingsCurrent)}/мес`}
+              subtitle={fireAgeSubtitle}
+            />
+            <ResultCard
+              variant="compact"
+              label="Портфель к выходу (текущий темп)"
+              hint="Сколько будет на счёте к желаемому возрасту, если продолжать откладывать текущую сумму."
+              value={moneyFormat(result.portfolioAtRetirementCurrent)}
+              subtitle={`При ${moneyFormat(monthlySavingsCurrent)}/мес · возраст ${retirementAge}`}
             />
             <ResultCard
               variant="compact"
@@ -215,14 +235,15 @@ export default function FireCalculator() {
         <div>
           <h2 className="type-h2">Рост портфеля к FIRE-цели</h2>
           <p className="mt-2 text-sm text-text-muted">
-            Пунктирная линия — целевой капитал. Точка — момент достижения FIRE при рекомендованных ежемесячных
-            взносах.
+            Сплошная линия — рост при рекомендуемом взносе, пунктир — при текущем. Горизонтальная линия — FIRE-цель.
+            Точки — момент достижения цели по каждому сценарию.
           </p>
         </div>
         <FireChart
           data={chartData}
           fireTarget={Math.round(result.fireNumber)}
           intersectionAge={result.intersectionAge}
+          intersectionAgeCurrent={result.intersectionAgeCurrent}
         />
       </section>
 

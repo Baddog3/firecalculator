@@ -24,15 +24,21 @@ npm run dev
 3. Если порт занят: `npm run dev -- -p 3001` и откройте http://localhost:3001
 4. После установки skills (папка `.agents`) перезапустите сервер: `Ctrl+C`, затем снова `npm run dev`.
 
-## Production-сборка (статический экспорт)
+## Production-сборка и деплой
+
+Скопируйте `.env.example` в `.env.local` и заполните `FTP_*` (пароль не коммитить).
+
+```bash
+npm run deploy
+```
+
+Скрипт собирает `out/` и заливает на FirstByte (`/www/firecalc.ru/`) через **lftp**. Обычный FTP обрезает файлы на этом хостинге — используйте только `npm run deploy`.
+
+Только сборка без заливки:
 
 ```bash
 NEXT_PUBLIC_SITE_URL=https://firecalc.ru NEXT_PUBLIC_YM_ID=109655149 npm run build
 ```
-
-Готовые файлы — в папке `out/`. Заливка на FirstByte: `/www/firecalc.ru/`.
-
-Скопируйте `.env.example` в `.env.local` для локальной разработки.
 
 ## Переменные окружения
 

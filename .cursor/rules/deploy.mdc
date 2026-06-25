@@ -1,0 +1,36 @@
+---
+description: Деплой firecalc.ru на FirstByte
+alwaysApply: true
+---
+
+# Деплой firecalc.ru
+
+Хостинг: **FirstByte**, статический экспорт Next.js → папка `out/` → FTP `/www/firecalc.ru/`.
+
+## Команда
+
+```bash
+npm run deploy
+```
+
+Скрипт: `scripts/deploy.sh` — сборка + заливка через **lftp mirror**.
+
+## Учётные данные
+
+В `.env.local` (не коммитить):
+
+```
+FTP_HOST=185.189.15.7
+FTP_USER=user4295495
+FTP_PASS=...
+FTP_REMOTE_DIR=/www/firecalc.ru
+NEXT_PUBLIC_SITE_URL=https://firecalc.ru
+NEXT_PUBLIC_YM_ID=109655149
+```
+
+## Важно
+
+- **Не использовать** `ftplib`, `curl -T` или обычный Python FTP — FirstByte обрезает файлы.
+- **Использовать только** `lftp mirror` (как в `scripts/deploy.sh`).
+- Перед заливкой удалять `_next/` на сервере (скрипт делает это сам).
+- После деплоя проверять `content-length` CSS/JS на проде vs локальный `out/`.

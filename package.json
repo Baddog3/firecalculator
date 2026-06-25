@@ -6,7 +6,8 @@
     "dev": "WATCHPACK_POLLING=true next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "bash scripts/deploy.sh"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

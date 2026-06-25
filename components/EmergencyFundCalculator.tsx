@@ -22,7 +22,7 @@ const moneyFormat = (value: number) =>
 
 const monthsLabel = (value: number | null) => {
   if (value === null) {
-    return "50+ мес.";
+    return "Не достижимо";
   }
 
   if (value === 0) {

@@ -297,8 +297,8 @@ export default function RentVsBuyCalculator() {
                   <th className="border-b border-border px-3 py-2 font-medium">Год</th>
                   <th className="border-b border-border px-3 py-2 font-medium">Покупка</th>
                   <th className="border-b border-border px-3 py-2 font-medium">Аренда</th>
-                  <th className="border-b border-border px-3 py-2 font-medium">Вложено (аренда)</th>
-                  <th className="border-b border-border px-3 py-2 font-medium">Вложено (покупка)</th>
+                  <th className="border-b border-border px-3 py-2 font-medium">Расходы на аренду</th>
+                  <th className="border-b border-border px-3 py-2 font-medium">Расходы на покупку</th>
                 </tr>
               </thead>
               <tbody>

@@ -42,7 +42,8 @@ export function calculateCompoundInterest(input: CompoundInput) {
     const balance = futurePrincipal + futureContributions;
 
     const withoutContributions = futurePrincipal;
-    const invested = principal + input.monthlyContribution * 12 * year;
+    const monthlyContribution = Math.max(0, input.monthlyContribution);
+    const invested = principal + monthlyContribution * 12 * year;
 
     rows.push({
       year,
@@ -91,10 +92,23 @@ export type FireResult = {
   monthlySavingsNeeded: number;
   yearsToFire: number | null;
   portfolioAtRetirement: number;
+  portfolioAtRetirementCurrent: number;
   yearsUntilRetirement: number;
   rows: FireYearRow[];
+  rowsCurrent: FireYearRow[];
   intersectionAge: number | null;
+  intersectionAgeCurrent: number | null;
 };
+
+function findIntersectionAge(rows: FireYearRow[], target: number): number | null {
+  for (const row of rows) {
+    if (row.portfolio >= target) {
+      return row.age;
+    }
+  }
+
+  return null;
+}
 
 function solveMonthlyPayment(
   principal: number,
@@ -203,7 +217,7 @@ export function calculateFire(input: FireInput): FireResult {
     monthlySavingsCurrent
   );
 
-  const rows = simulateFirePortfolio(
+  const retirementRows = simulateFirePortfolio(
     currentAge,
     currentSavings,
     monthlySavingsNeeded,
@@ -211,15 +225,33 @@ export function calculateFire(input: FireInput): FireResult {
     yearsUntilRetirement
   );
 
-  const portfolioAtRetirement = rows[rows.length - 1]?.portfolio ?? currentSavings;
+  const chartYears = Math.min(
+    100,
+    Math.max(yearsUntilRetirement, yearsToFire ?? yearsUntilRetirement)
+  );
 
-  let intersectionAge: number | null = null;
-  for (const row of rows) {
-    if (row.portfolio >= fireNumber) {
-      intersectionAge = row.age;
-      break;
-    }
-  }
+  const rows =
+    chartYears === yearsUntilRetirement
+      ? retirementRows
+      : simulateFirePortfolio(
+          currentAge,
+          currentSavings,
+          monthlySavingsNeeded,
+          annualReturn,
+          chartYears
+        );
+
+  const rowsCurrent = simulateFirePortfolio(
+    currentAge,
+    currentSavings,
+    monthlySavingsCurrent,
+    annualReturn,
+    chartYears
+  );
+
+  const portfolioAtRetirement = retirementRows[retirementRows.length - 1]?.portfolio ?? currentSavings;
+  const portfolioAtRetirementCurrent =
+    rowsCurrent[Math.min(yearsUntilRetirement, rowsCurrent.length - 1)]?.portfolio ?? currentSavings;
 
   return {
     fireNumber,
@@ -227,9 +259,12 @@ export function calculateFire(input: FireInput): FireResult {
     monthlySavingsNeeded,
     yearsToFire,
     portfolioAtRetirement,
+    portfolioAtRetirementCurrent,
     yearsUntilRetirement,
     rows,
-    intersectionAge
+    rowsCurrent,
+    intersectionAge: findIntersectionAge(rows, fireNumber),
+    intersectionAgeCurrent: findIntersectionAge(rowsCurrent, fireNumber)
   };
 }
 
@@ -428,7 +463,8 @@ export function calculateEtf(input: EtfInput): EtfResult {
   const ter = Math.max(0, input.terPercent) / 100;
 
   const monthlyGross = grossReturn / 12;
-  const monthlyNet = monthlyGross - ter / 12;
+  const monthlyNet =
+    ter === 0 ? monthlyGross : (1 + monthlyGross) * Math.pow(1 - ter, 1 / 12) - 1;
 
   let balanceNet = initialAmount;
   let balanceGross = initialAmount;
